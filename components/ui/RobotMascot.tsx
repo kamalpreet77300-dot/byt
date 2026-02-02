@@ -36,30 +36,36 @@ const CODE_SNIPPETS: Record<string, { lang: string; code: string }> = {
     }
 };
 
-const LaptopScreen = ({ code, lang, isInteracting }: { code: string; lang: string; isInteracting: boolean }) => {
+const LaptopScreen = ({ code, lang, isInteracting, isFixing }: { code: string; lang: string; isInteracting: boolean; isFixing: boolean }) => {
     const textRef = useRef<THREE.Group>(null);
 
     useFrame((state) => {
         if (textRef.current) {
             // Speed up scroll when interacting
-            const speed = isInteracting ? 1.5 : 0.3;
+            const speed = isInteracting || isFixing ? 1.5 : 0.3;
             textRef.current.position.y = 0.2 + Math.sin(state.clock.elapsedTime * speed) * 0.05;
         }
     });
+
+    const getDisplayText = () => {
+        if (isFixing) return `\n\n   COMPONENT\n   OPTIMIZED\n   ✓ SUCCESS`;
+        if (isInteracting) return `ANALYZING COMPONENT...\n\n${lang.toUpperCase()}\n\n${code}`;
+        return `${lang.toUpperCase()}\n\n${code}`;
+    }
 
     return (
         <group position={[0, -0.05, 0.02]} rotation={[0, 0, 0]}>
             <Text
                 ref={textRef as any}
                 fontSize={0.035}
-                color={isInteracting ? "#ffffff" : "#00ffff"}
+                color={isFixing ? "#00ff00" : isInteracting ? "#ffffff" : "#00ffff"}
                 anchorX="center"
                 anchorY="middle"
                 maxWidth={0.5}
                 lineHeight={1.2}
                 textAlign="left"
             >
-                {isInteracting ? `ANALYZING COMPONENT...\n\n${lang.toUpperCase()}\n\n${code}` : `${lang.toUpperCase()}\n\n${code}`}
+                {getDisplayText()}
             </Text>
         </group>
     );
@@ -95,10 +101,11 @@ const ScanBeam = ({ targetPos, sourcePos }: { targetPos: THREE.Vector3; sourcePo
     );
 };
 
-const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey }: {
+const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, isFixing, sectionKey }: {
     targetPosRef: React.RefObject<THREE.Vector3>;
     interactionPosRef: React.RefObject<THREE.Vector3>;
     isInteracting: boolean;
+    isFixing: boolean;
     sectionKey: string
 }) => {
     const groupRef = useRef<THREE.Group>(null);
@@ -139,7 +146,16 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey
         groupRef.current.position.y += Math.sin(state.clock.elapsedTime * 1.5) * 0.005;
 
         // Pulse effect
-        bloomPulse.emissiveIntensity = (isInteracting ? 5 : 2) + Math.sin(state.clock.elapsedTime * 5) * 1;
+        bloomPulse.emissiveIntensity = (isInteracting || isFixing ? 5 : 2) + Math.sin(state.clock.elapsedTime * 5) * 1;
+
+        // Green color for fixing state
+        if (isFixing) {
+            bloomPulse.color.set("#00ff00");
+            bloomPulse.emissive.set("#00ff00");
+        } else {
+            bloomPulse.color.set("#00ffff");
+            bloomPulse.emissive.set("#00ffff");
+        }
 
         if (isInteracting && interactionPosRef.current) {
             // Look at interaction target
@@ -155,6 +171,16 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey
             }
             if (leftArmRef.current) {
                 leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 30) * 0.1;
+            }
+        } else if (isFixing) {
+            // Fixing Animation (Nodding / Thumbs Up illusion)
+            headRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 15) * 0.2; // Rapid nodding
+            headRef.current.rotation.y = 0;
+
+            // "Typing" or "Fixing" fast arm movement
+            if (leftArmRef.current && rightArmRef.current) {
+                leftArmRef.current.rotation.x = -Math.PI / 3 + Math.sin(state.clock.elapsedTime * 40) * 0.2;
+                rightArmRef.current.rotation.x = -Math.PI / 3 + Math.cos(state.clock.elapsedTime * 40) * 0.2;
             }
         } else {
             headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.3, 0.05);
@@ -330,7 +356,9 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey
                         <meshStandardMaterial color="#000000" emissive="#00ffff" emissiveIntensity={0.2} transparent opacity={0.5} />
                     </mesh>
                     <group position={[0, 0.3, 0.022]}>
-                        <LaptopScreen code={snippet.code} lang={snippet.lang} isInteracting={isInteracting} />
+                        <group position={[0, 0.3, 0.022]}>
+                            <LaptopScreen code={snippet.code} lang={snippet.lang} isInteracting={isInteracting} isFixing={isFixing} />
+                        </group>
                     </group>
                 </group>
             </group>
@@ -348,7 +376,10 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey
 export default function RobotMascot() {
     const targetPosRef = useRef<THREE.Vector3>(new THREE.Vector3(2, 2, 0));
     const interactionPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const targetPosRef = useRef<THREE.Vector3>(new THREE.Vector3(2, 2, 0));
+    const interactionPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [isInteracting, setIsInteracting] = useState(false);
+    const [isFixing, setIsFixing] = useState(false);
     const [sectionKey, setSectionKey] = useState("default");
 
     useEffect(() => {
@@ -378,8 +409,14 @@ export default function RobotMascot() {
 
                 interactionPosRef.current.set((ndcX * vWidth) / 2, (ndcY * vHeight) / 2, 0);
                 setIsInteracting(true);
+                setIsFixing(false); // Cancel fixing if new interaction starts
             } else {
-                setIsInteracting(false);
+                if (isInteracting) {
+                    // Just stopped interacting, trigger fixing
+                    setIsInteracting(false);
+                    setIsFixing(true);
+                    setTimeout(() => setIsFixing(false), 2000); // Fixing duration
+                }
             }
 
             // Fixed container handling
@@ -461,6 +498,7 @@ export default function RobotMascot() {
                         targetPosRef={targetPosRef}
                         interactionPosRef={interactionPosRef}
                         isInteracting={isInteracting}
+                        isFixing={isFixing}
                         sectionKey={sectionKey}
                     />
                 </Float>
