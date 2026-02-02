@@ -3,8 +3,8 @@ export const SITE_CONFIG = {
     description: 'Leading IT Services & Training Company',
     url: 'https://bytsmartz.com',
     email: 'contact@bytsmartz.com',
-    phone: '+91 98765 43210',
-    whatsapp: '+919876543210',
+    phone: '+91 98881 19100',
+    whatsapp: '+919988759100',
     address: 'Bangalore, Karnataka, India',
 };
 

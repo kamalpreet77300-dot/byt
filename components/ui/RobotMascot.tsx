@@ -36,13 +36,14 @@ const CODE_SNIPPETS: Record<string, { lang: string; code: string }> = {
     }
 };
 
-const LaptopScreen = ({ code, lang }: { code: string; lang: string }) => {
+const LaptopScreen = ({ code, lang, isInteracting }: { code: string; lang: string; isInteracting: boolean }) => {
     const textRef = useRef<THREE.Group>(null);
 
     useFrame((state) => {
         if (textRef.current) {
-            // Very slight vertical scroll
-            textRef.current.position.y = 0.2 + Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
+            // Speed up scroll when interacting
+            const speed = isInteracting ? 1.5 : 0.3;
+            textRef.current.position.y = 0.2 + Math.sin(state.clock.elapsedTime * speed) * 0.05;
         }
     });
 
@@ -51,214 +52,366 @@ const LaptopScreen = ({ code, lang }: { code: string; lang: string }) => {
             <Text
                 ref={textRef as any}
                 fontSize={0.035}
-                color="#00ffff"
+                color={isInteracting ? "#ffffff" : "#00ffff"}
                 anchorX="center"
                 anchorY="middle"
                 maxWidth={0.5}
                 lineHeight={1.2}
                 textAlign="left"
             >
-                {`${lang.toUpperCase()}\n\n${code}`}
+                {isInteracting ? `ANALYZING COMPONENT...\n\n${lang.toUpperCase()}\n\n${code}` : `${lang.toUpperCase()}\n\n${code}`}
             </Text>
         </group>
     );
 };
 
-const RobotModel = ({ targetPosRef, sectionKey }: { targetPosRef: React.RefObject<THREE.Vector3 | null>; sectionKey: string }) => {
+const ScanBeam = ({ targetPos, sourcePos }: { targetPos: THREE.Vector3; sourcePos: THREE.Vector3 }) => {
+    const beamRef = useRef<THREE.Mesh>(null);
+    const beamMat = useMemo(() => new THREE.MeshStandardMaterial({
+        color: "#00ffff",
+        emissive: "#00ffff",
+        emissiveIntensity: 10,
+        transparent: true,
+        opacity: 0.8
+    }), []);
+
+    useFrame((state) => {
+        if (!beamRef.current) return;
+
+        const dist = sourcePos.distanceTo(targetPos);
+        beamRef.current.scale.set(1, dist, 1);
+        beamRef.current.position.copy(sourcePos).lerp(targetPos, 0.5);
+        beamRef.current.lookAt(targetPos);
+        beamRef.current.rotateX(Math.PI / 2);
+
+        beamMat.opacity = 0.4 + Math.sin(state.clock.elapsedTime * 20) * 0.2;
+    });
+
+    return (
+        <mesh ref={beamRef}>
+            <cylinderGeometry args={[0.01, 0.03, 1, 8]} />
+            <primitive object={beamMat} attach="material" />
+        </mesh>
+    );
+};
+
+const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, sectionKey }: {
+    targetPosRef: React.RefObject<THREE.Vector3>;
+    interactionPosRef: React.RefObject<THREE.Vector3>;
+    isInteracting: boolean;
+    sectionKey: string
+}) => {
     const groupRef = useRef<THREE.Group>(null);
     const headRef = useRef<THREE.Group>(null);
     const laptopRef = useRef<THREE.Group>(null);
     const leftArmRef = useRef<THREE.Group>(null);
     const rightArmRef = useRef<THREE.Group>(null);
+    const [scale, setScale] = useState(0.35);
+
+    useEffect(() => {
+        const updateScale = () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            // More conservative scaling to avoid overlap
+            let newScale = width < 768 ? 0.18 : width < 1280 ? 0.28 : 0.38;
+            if (height < 700) newScale *= 0.85;
+            setScale(newScale);
+        };
+        updateScale();
+        window.addEventListener('resize', updateScale);
+        return () => window.removeEventListener('resize', updateScale);
+    }, []);
 
     const snippet = useMemo(() => CODE_SNIPPETS[sectionKey] || CODE_SNIPPETS.default, [sectionKey]);
+
+    const bloomPulse = useMemo(() => new THREE.MeshStandardMaterial({
+        color: "#00ffff",
+        emissive: "#00ffff",
+        emissiveIntensity: 2,
+        metalness: 1,
+        roughness: 0
+    }), []);
 
     useFrame((state) => {
         if (!groupRef.current || !headRef.current || !targetPosRef.current) return;
 
-        // Smooth movement to target position
         groupRef.current.position.lerp(targetPosRef.current, 0.08);
+        groupRef.current.position.y += Math.sin(state.clock.elapsedTime * 1.5) * 0.005;
 
-        // Subtle floating
-        groupRef.current.position.y += Math.sin(state.clock.elapsedTime * 1.5) * 0.002;
+        // Pulse effect
+        bloomPulse.emissiveIntensity = (isInteracting ? 5 : 2) + Math.sin(state.clock.elapsedTime * 5) * 1;
 
-        // Look at laptop
-        headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.5, 0.1);
+        if (isInteracting && interactionPosRef.current) {
+            // Look at interaction target
+            const lookPos = interactionPosRef.current.clone().sub(groupRef.current.position).multiplyScalar(1 / scale);
+            headRef.current.lookAt(lookPos);
+            // Limit neck rotation for realism
+            headRef.current.rotation.x = THREE.MathUtils.clamp(headRef.current.rotation.x, -0.4, 0.6);
+            headRef.current.rotation.y = THREE.MathUtils.clamp(headRef.current.rotation.y, -0.8, 0.8);
 
-        // Typing animation
-        if (leftArmRef.current && rightArmRef.current) {
-            leftArmRef.current.rotation.x = -Math.PI / 3 + Math.sin(state.clock.elapsedTime * 25) * 0.1;
-            rightArmRef.current.rotation.x = -Math.PI / 3 + Math.cos(state.clock.elapsedTime * 25 + 0.5) * 0.1;
+            if (rightArmRef.current) {
+                rightArmRef.current.lookAt(lookPos);
+                rightArmRef.current.rotateX(-Math.PI / 2);
+            }
+            if (leftArmRef.current) {
+                leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 30) * 0.1;
+            }
+        } else {
+            headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.3, 0.05);
+            headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, Math.sin(state.clock.elapsedTime * 0.5) * 0.1, 0.05);
+
+            if (leftArmRef.current && rightArmRef.current) {
+                leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 15) * 0.05;
+                rightArmRef.current.rotation.x = -Math.PI / 4 + Math.cos(state.clock.elapsedTime * 15 + 0.5) * 0.05;
+            }
         }
     });
 
     return (
-        <group ref={groupRef} scale={0.6}>
-            {/* Body: High-tech core */}
-            <mesh position={[0, 0, 0]}>
-                <boxGeometry args={[0.7, 0.9, 0.5]} />
-                <meshStandardMaterial color="#1e293b" metalness={0.9} roughness={0.1} />
-            </mesh>
-            {/* Power Core */}
-            <mesh position={[0, 0.1, 0.26]} rotation={[Math.PI / 2, 0, 0]}>
-                <cylinderGeometry args={[0.15, 0.15, 0.05, 32]} />
-                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={2} />
+        <group ref={groupRef} scale={scale}>
+            {/* Energy Ring Behind Robot */}
+            <mesh position={[0, 0, -0.3]}>
+                <torusGeometry args={[1, 0.02, 16, 100]} />
+                <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1} transparent opacity={0.3} />
             </mesh>
 
-            {/* Head: Enhanced design */}
-            <group ref={headRef} position={[0, 0.7, 0]}>
-                <mesh>
-                    <boxGeometry args={[0.6, 0.5, 0.5]} />
-                    <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.2} />
+            {/* Main Torso */}
+            <group position={[0, 0, 0]}>
+                <RoundedBox args={[0.7, 0.9, 0.45]} radius={0.12} smoothness={4}>
+                    <meshStandardMaterial color="#0f172a" metalness={0.9} roughness={0.1} />
+                </RoundedBox>
+                {/* Internal Glow visible through slits */}
+                <mesh position={[0, 0, 0.23]}>
+                    <boxGeometry args={[0.4, 0.6, 0.01]} />
+                    <primitive object={bloomPulse} attach="material" transparent opacity={0.1} />
                 </mesh>
-                {/* Antennas */}
-                <mesh position={[-0.2, 0.3, 0]}>
-                    <cylinderGeometry args={[0.02, 0.02, 0.3]} />
-                    <meshStandardMaterial color="#94a3b8" />
-                </mesh>
-                <mesh position={[-0.2, 0.45, 0]}>
-                    <sphereGeometry args={[0.04]} />
-                    <meshStandardMaterial color="#00ffff" emissive="#00ffff" />
-                </mesh>
-                <mesh position={[0.2, 0.3, 0]}>
-                    <cylinderGeometry args={[0.02, 0.02, 0.3]} />
-                    <meshStandardMaterial color="#94a3b8" />
-                </mesh>
-                <mesh position={[0.2, 0.45, 0]}>
-                    <sphereGeometry args={[0.04]} />
-                    <meshStandardMaterial color="#00ffff" emissive="#00ffff" />
-                </mesh>
-                {/* Visor Area */}
-                <mesh position={[0, 0.05, 0.26]}>
-                    <planeGeometry args={[0.5, 0.2]} />
-                    <meshStandardMaterial color="#0f172a" metalness={1} roughness={0} />
-                </mesh>
-                {/* Eyes: Glowing dots */}
-                <mesh position={[-0.15, 0.05, 0.27]}>
-                    <sphereGeometry args={[0.05]} />
-                    <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={5} />
-                </mesh>
-                <mesh position={[0.15, 0.05, 0.27]}>
-                    <sphereGeometry args={[0.05]} />
-                    <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={5} />
-                </mesh>
+                {/* Core Reactor */}
+                <group position={[0, 0.1, 0.23]}>
+                    <mesh rotation={[Math.PI / 2, 0, 0]}>
+                        <cylinderGeometry args={[0.15, 0.15, 0.05, 32]} />
+                        <primitive object={bloomPulse} attach="material" />
+                    </mesh>
+                    <mesh position={[0, 0, 0.03]} rotation={[Math.PI / 2, 0, 0]}>
+                        <ringGeometry args={[0.16, 0.18, 32]} />
+                        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={5} />
+                    </mesh>
+                </group>
             </group>
 
-            {/* Arms: Segmented */}
-            <group ref={leftArmRef} position={[-0.45, 0.2, 0]}>
-                {/* Shoulder */}
-                <mesh position={[0, 0, 0]}>
-                    <sphereGeometry args={[0.12]} />
-                    <meshStandardMaterial color="#475569" />
-                </mesh>
-                {/* Upper Arm */}
-                <mesh position={[-0.1, -0.2, 0]}>
-                    <cylinderGeometry args={[0.08, 0.08, 0.4]} />
-                    <meshStandardMaterial color="#1e293b" />
-                </mesh>
-                {/* Hands */}
-                <mesh position={[-0.1, -0.45, 0]}>
-                    <boxGeometry args={[0.15, 0.15, 0.15]} />
-                    <meshStandardMaterial color="#00ffff" metalness={0.9} />
-                </mesh>
-            </group>
-
-            <group ref={rightArmRef} position={[0.45, 0.2, 0]}>
-                <mesh position={[0, 0, 0]}>
-                    <sphereGeometry args={[0.12]} />
-                    <meshStandardMaterial color="#475569" />
-                </mesh>
-                <mesh position={[0.1, -0.2, 0]}>
-                    <cylinderGeometry args={[0.08, 0.08, 0.4]} />
-                    <meshStandardMaterial color="#1e293b" />
-                </mesh>
-                <mesh position={[0.1, -0.45, 0]}>
-                    <boxGeometry args={[0.15, 0.15, 0.15]} />
-                    <meshStandardMaterial color="#00ffff" metalness={0.9} />
-                </mesh>
-            </group>
-
-            {/* Legs: Industrial look */}
-            <group position={[-0.2, -0.6, 0]}>
-                <mesh>
-                    <cylinderGeometry args={[0.12, 0.1, 0.6]} />
-                    <meshStandardMaterial color="#334155" />
-                </mesh>
-                <mesh position={[0, -0.35, 0.05]}>
-                    <boxGeometry args={[0.2, 0.1, 0.3]} />
-                    <meshStandardMaterial color="#0f172a" />
-                </mesh>
-            </group>
-            <group position={[0.2, -0.6, 0]}>
-                <mesh>
-                    <cylinderGeometry args={[0.12, 0.1, 0.6]} />
-                    <meshStandardMaterial color="#334155" />
-                </mesh>
-                <mesh position={[0, -0.35, 0.05]}>
-                    <boxGeometry args={[0.2, 0.1, 0.3]} />
-                    <meshStandardMaterial color="#0f172a" />
-                </mesh>
-            </group>
-
-            {/* Laptop: Modern slim design */}
-            <group ref={laptopRef} position={[0, -0.1, 0.6]} rotation={[-0.1, 0, 0]}>
-                {/* Base */}
+            {/* Segmented Neck */}
+            <group position={[0, 0.5, 0]}>
                 <mesh position={[0, -0.05, 0]}>
-                    <boxGeometry args={[0.7, 0.04, 0.5]} />
-                    <meshStandardMaterial color="#0f172a" metalness={1} roughness={0.2} />
+                    <cylinderGeometry args={[0.08, 0.1, 0.1]} />
+                    <meshStandardMaterial color="#1e293b" />
                 </mesh>
-                {/* Screen Hinge Area */}
-                <group position={[0, 0, -0.25]} rotation={[Math.PI / 2.5, 0, 0]}>
-                    <mesh position={[0, 0.25, 0]}>
-                        <boxGeometry args={[0.7, 0.5, 0.03]} />
-                        <meshStandardMaterial color="#1e293b" metalness={0.8} />
+            </group>
+
+            {/* Advanced Head Unit */}
+            <group ref={headRef} position={[0, 0.8, 0]}>
+                <RoundedBox args={[0.6, 0.5, 0.45]} radius={0.15} smoothness={4}>
+                    <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+                </RoundedBox>
+
+                {/* Visor Panel */}
+                <mesh position={[0, 0, 0.23]}>
+                    <RoundedBox args={[0.5, 0.25, 0.02]} radius={0.05}>
+                        <meshStandardMaterial color="#000000" metalness={1} roughness={0} />
+                    </RoundedBox>
+                </mesh>
+
+                {/* Cyber Eyes */}
+                {[-1, 1].map((side) => (
+                    <group key={side} position={[0.15 * side, 0, 0.25]}>
+                        <mesh>
+                            <sphereGeometry args={[0.07]} />
+                            <primitive object={bloomPulse} attach="material" />
+                        </mesh>
+                        <mesh position={[0, 0, 0.01]}>
+                            <torusGeometry args={[0.08, 0.01, 8, 32]} />
+                            <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
+                        </mesh>
+                    </group>
+                ))}
+
+                {/* Sensor Array (Antennas) */}
+                {[-1, 1].map((side) => (
+                    <group key={side} position={[0.2 * side, 0.25, 0]} rotation={[0, 0, 0.2 * side]}>
+                        <mesh>
+                            <cylinderGeometry args={[0.01, 0.02, 0.4]} />
+                            <meshStandardMaterial color="#334155" />
+                        </mesh>
+                        <mesh position={[0, 0.2, 0]}>
+                            <sphereGeometry args={[0.04]} />
+                            <primitive object={bloomPulse} attach="material" />
+                        </mesh>
+                    </group>
+                ))}
+            </group>
+
+            {/* Professional Articulated Arms */}
+            {[-1, 1].map((side) => (
+                <group key={side} ref={side === -1 ? leftArmRef : rightArmRef} position={[0.45 * side, 0.25, 0]}>
+                    {/* Shoulder Ball Joint */}
+                    <mesh>
+                        <sphereGeometry args={[0.15]} />
+                        <meshStandardMaterial color="#334155" metalness={1} />
                     </mesh>
-                    {/* Screen Display */}
-                    <mesh position={[0, 0.25, 0.021]}>
-                        <planeGeometry args={[0.65, 0.45]} />
-                        <meshStandardMaterial color="#000000" emissive="#003333" emissiveIntensity={0.5} />
+                    {/* Upper Arm Bone */}
+                    <group position={[0.1 * side, -0.2, 0]} rotation={[0, 0, 0.2 * side]}>
+                        <mesh>
+                            <cylinderGeometry args={[0.06, 0.08, 0.4]} />
+                            <meshStandardMaterial color="#0f172a" />
+                        </mesh>
+                        {/* Hydraulics */}
+                        <mesh position={[0.05 * side, 0, 0]}>
+                            <cylinderGeometry args={[0.01, 0.01, 0.35]} />
+                            <meshStandardMaterial color="#475569" metalness={1} />
+                        </mesh>
+                    </group>
+                    {/* Elbow Joint */}
+                    <mesh position={[0.2 * side, -0.4, 0]}>
+                        <sphereGeometry args={[0.1]} />
+                        <meshStandardMaterial color="#00ffff" />
                     </mesh>
-                    {/* The Actual Code Text */}
-                    <group position={[0, 0.25, 0.022]}>
-                        <LaptopScreen code={snippet.code} lang={snippet.lang} />
+                    {/* Functional Hands */}
+                    <group position={[0.25 * side, -0.6, 0.1]}>
+                        <RoundedBox args={[0.15, 0.2, 0.15]} radius={0.03}>
+                            <meshStandardMaterial color="#1e293b" />
+                        </RoundedBox>
+                        {/* Glow on palm */}
+                        <mesh position={[0, -0.05, 0.08]}>
+                            <sphereGeometry args={[0.04]} />
+                            <primitive object={bloomPulse} attach="material" />
+                        </mesh>
+                    </group>
+                </group>
+            ))}
+
+            {/* Industrial Legs with Pistons */}
+            {[-1, 1].map((side) => (
+                <group key={side} position={[0.25 * side, -0.6, 0]}>
+                    <mesh>
+                        <sphereGeometry args={[0.14]} />
+                        <meshStandardMaterial color="#334155" />
+                    </mesh>
+                    <mesh position={[0, -0.3, 0]}>
+                        <cylinderGeometry args={[0.12, 0.1, 0.6]} />
+                        <meshStandardMaterial color="#0f172a" />
+                    </mesh>
+                    {/* Piston Detail */}
+                    <mesh position={[0.1 * side, -0.3, 0.05]}>
+                        <cylinderGeometry args={[0.02, 0.02, 0.4]} />
+                        <meshStandardMaterial color="#475569" metalness={1} />
+                    </mesh>
+                    <RoundedBox args={[0.25, 0.15, 0.4]} radius={0.04} position={[0, -0.65, 0.1]}>
+                        <meshStandardMaterial color="#1e293b" />
+                    </RoundedBox>
+                </group>
+            ))}
+
+            {/* High-Performance Workstation */}
+            <group ref={laptopRef} position={[0, -0.1, 0.7]} rotation={[-0.2, 0, 0]}>
+                <RoundedBox args={[0.9, 0.06, 0.6]} radius={0.02} position={[0, -0.05, 0]}>
+                    <meshStandardMaterial color="#000000" metalness={1} roughness={0.1} />
+                </RoundedBox>
+                {/* Glowing edge on laptop */}
+                <mesh position={[0, -0.05, 0.301]}>
+                    <boxGeometry args={[0.8, 0.01, 0.01]} />
+                    <primitive object={bloomPulse} attach="material" />
+                </mesh>
+
+                <group position={[0, 0, -0.3]} rotation={[Math.PI / 2.2, 0, 0]}>
+                    <RoundedBox args={[0.9, 0.6, 0.03]} radius={0.02} position={[0, 0.3, 0]}>
+                        <meshStandardMaterial color="#0f172a" metalness={0.8} />
+                    </RoundedBox>
+                    {/* Screen Emit */}
+                    <mesh position={[0, 0.3, 0.021]}>
+                        <planeGeometry args={[0.84, 0.54]} />
+                        <meshStandardMaterial color="#000000" emissive="#00ffff" emissiveIntensity={0.2} transparent opacity={0.5} />
+                    </mesh>
+                    <group position={[0, 0.3, 0.022]}>
+                        <LaptopScreen code={snippet.code} lang={snippet.lang} isInteracting={isInteracting} />
                     </group>
                 </group>
             </group>
+
+            {isInteracting && interactionPosRef.current && groupRef.current && (
+                <ScanBeam
+                    sourcePos={new THREE.Vector3(0.3, 0, 0).applyMatrix4(groupRef.current.matrixWorld)}
+                    targetPos={interactionPosRef.current}
+                />
+            )}
         </group>
     );
 };
 
 export default function RobotMascot() {
     const targetPosRef = useRef<THREE.Vector3>(new THREE.Vector3(2, 2, 0));
+    const interactionPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [isInteracting, setIsInteracting] = useState(false);
     const [sectionKey, setSectionKey] = useState("default");
 
     useEffect(() => {
         let lastSection = "default";
 
         const handleUpdate = () => {
-            const x = (window as any)._lastMouseX || window.innerWidth / 2;
-            const y = (window as any)._lastMouseY || window.innerHeight / 2;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const x = (window as any)._lastMouseX || width / 2;
+            const y = (window as any)._lastMouseY || height / 2;
 
             const element = document.elementFromPoint(x, y);
-            if (!element) return;
 
-            const section = element.closest("section, footer, main > div, header, [id*='hero'], [class*='hero']");
-            if (section) {
-                const rect = section.getBoundingClientRect();
+            // Interaction detection
+            const interactive = element?.closest("button, a, svg, img, .card, [class*='card'], [class*='group/item'], [class*='icon']");
+            if (interactive) {
+                const irect = interactive.getBoundingClientRect();
+                const centerX = irect.left + irect.width / 2;
+                const centerY = irect.top + irect.height / 2;
 
-                const ndcX = (rect.right / window.innerWidth) * 2 - 1;
-                const ndcY = -(rect.top / window.innerHeight) * 2 + 1;
-
-                const aspect = window.innerWidth / window.innerHeight;
-                const vHeight = 2 * Math.tan((50 * Math.PI) / 360) * 5;
+                const aspect = width / height;
+                const vHeight = 4.66;
                 const vWidth = vHeight * aspect;
 
-                const margin = 0.6; // Reduced margin for smaller robot
-                targetPosRef.current.set(
-                    (ndcX * vWidth) / 2 - margin,
-                    (ndcY * vHeight) / 2 - margin,
-                    0
-                );
+                const ndcX = (centerX / width) * 2 - 1;
+                const ndcY = -(centerY / height) * 2 + 1;
+
+                interactionPosRef.current.set((ndcX * vWidth) / 2, (ndcY * vHeight) / 2, 0);
+                setIsInteracting(true);
+            } else {
+                setIsInteracting(false);
+            }
+
+            // Fixed container handling
+            const section = element?.closest("section, footer, main > div, header, [id*='hero'], [class*='hero']") || document.querySelector("section");
+
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                const isSmall = width < 768;
+
+                // NDC calculation with safety margins
+                const ndcX = (rect.right / width) * 2 - 1;
+                const ndcY = -(rect.top / height) * 2 + 1;
+
+                const aspect = width / height;
+                const vHeight = 4.66; // Fixed based on distance 5 and fov 50
+                const vWidth = vHeight * aspect;
+
+                // Targeting logic: Stay to the right, but keep fully in view
+                // Offset calculation based on scale
+                const robotScale = isSmall ? 0.18 : width < 1280 ? 0.28 : 0.38;
+                const robotWidth = 1.0 * robotScale; // Account for arms/laptop
+                const robotHeight = 2.0 * robotScale;
+
+                const targetX = (ndcX * vWidth) / 2 - (isSmall ? robotWidth + 0.1 : robotWidth + 0.6);
+                const targetY = (ndcY * vHeight) / 2 - (isSmall ? robotHeight + 0.2 : robotHeight + 0.8);
+
+                // Strict clamping to viewport
+                const margin = 0.2;
+                const clampedX = Math.max(-vWidth / 2 + robotWidth + margin, Math.min(vWidth / 2 - robotWidth - margin, targetX));
+                const clampedY = Math.max(-vHeight / 2 + robotHeight + margin, Math.min(vHeight / 2 - robotHeight - margin, targetY));
+
+                targetPosRef.current.set(clampedX, clampedY, 0);
 
                 let newKey = "default";
                 const id = section.id?.toLowerCase() || "";
@@ -304,7 +457,12 @@ export default function RobotMascot() {
                 <Environment preset="city" />
 
                 <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-                    <RobotModel targetPosRef={targetPosRef} sectionKey={sectionKey} />
+                    <RobotModel
+                        targetPosRef={targetPosRef}
+                        interactionPosRef={interactionPosRef}
+                        isInteracting={isInteracting}
+                        sectionKey={sectionKey}
+                    />
                 </Float>
 
                 <ContactShadows position={[0, -1.8, 0]} opacity={0.6} scale={10} blur={2.5} far={4.5} />
