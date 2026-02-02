@@ -16,12 +16,36 @@ export default function ContactPage() {
         message: '',
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission
-        console.log('Form submitted:', formData);
-        alert('Thank you for your message! We\'ll get back to you soon.');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'CONTACT',
+                    ...formData
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Thank you for your message! We\'ll get back to you soon.');
+                setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+            } else {
+                alert('Something went wrong. Please try again or contact us directly via email.');
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Failed to send message. Please check your connection.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -119,8 +143,8 @@ export default function ContactPage() {
                                     />
                                 </div>
 
-                                <Button type="submit" variant="primary" size="lg" className="w-full" rightIcon={<TiLocationArrow />}>
-                                    Send Message
+                                <Button type="submit" variant="primary" size="lg" className="w-full" rightIcon={<TiLocationArrow />} disabled={isSubmitting}>
+                                    {isSubmitting ? 'Sending...' : 'Send Message'}
                                 </Button>
                             </form>
                         </div>
@@ -133,8 +157,8 @@ export default function ContactPage() {
                                     <HiMail className="text-3xl text-blue-600 mt-1" />
                                     <div>
                                         <h3 className="font-bold mb-1">Email</h3>
-                                        <a href="mailto:contact@techprosolutions.com" className="text-blue-600 hover:underline">
-                                            contact@techprosolutions.com
+                                        <a href="mailto:contact@bytsmartz.com" className="text-blue-600 hover:underline">
+                                            contact@bytsmartz.com
                                         </a>
                                     </div>
                                 </div>

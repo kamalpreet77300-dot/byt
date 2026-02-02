@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiCode, HiChip, HiShoppingCart, HiCheck, HiServer, HiDatabase, HiDeviceMobile } from 'react-icons/hi';
+import PurchaseButton from '@/components/projects/PurchaseButton';
 
 const PROJECTS = [
     {
@@ -126,6 +127,66 @@ const PROJECTS = [
             'Multi-warehouse Support'
         ]
     },
+    {
+        id: 7,
+        title: 'CRM System',
+        slug: 'crm-system',
+        description: 'Customer relationship management platform with lead tracking, sales funnel, and automated reporting.',
+        price: 34999,
+        tech: ['Vue.js', 'Laravel', 'PostgreSQL', 'Redis', 'Docker'],
+        category: 'SaaS',
+        image: '👥',
+        gradient: 'from-blue-100 to-cyan-50',
+        features: [
+            'Lead & Contact Management',
+            'Sales Pipeline Tracking',
+            'Email Marketing Integration',
+            'Task & Activity Management',
+            'Role-based Data Access',
+            'Advanced Analytics Dashboard',
+            'Mobile Responsive UI'
+        ]
+    },
+    {
+        id: 8,
+        title: 'Learning Management System',
+        slug: 'learning-management-system',
+        description: 'Online learning platform with course hosting, student progress tracking, and certification system.',
+        price: 29999,
+        tech: ['React', 'Node.js', 'MongoDB', 'AWS S3', 'Socket.io'],
+        category: 'Final Year',
+        image: '🎓',
+        gradient: 'from-indigo-100 to-purple-50',
+        features: [
+            'Course Creation & Management',
+            'Video Streaming Integration',
+            'Quizzes & Assignments',
+            'Student Grading System',
+            'Automated Certification',
+            'Live Chat Support',
+            'Discussion Forums'
+        ]
+    },
+    {
+        id: 9,
+        title: 'Hotel Booking System',
+        slug: 'hotel-booking-system',
+        description: 'Complete hotel reservation platform with room management, booking engine, and staff portal.',
+        price: 32999,
+        tech: ['Angular', 'Spring Boot', 'MySQL', 'Hibernate', 'JasperReports'],
+        category: 'Web Apps',
+        image: '🏨',
+        gradient: 'from-amber-100 to-orange-50',
+        features: [
+            'Room Availability Calendar',
+            'Online Booking Engine',
+            'Invoice & Receipt Generation',
+            'Staff Role Management',
+            'Customer History & Loyalty',
+            'Housekeeping Status',
+            'Financial Inventory Reports'
+        ]
+    },
 ];
 
 export async function generateStaticParams() {
@@ -134,8 +195,9 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
-    const project = PROJECTS.find((p) => p.slug === params.slug);
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const project = PROJECTS.find((p) => p.slug === slug);
 
     if (!project) {
         notFound();
@@ -172,9 +234,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <Button variant="primary" size="lg" rightIcon={<HiShoppingCart />}>
-                                    Buy Source Code
-                                </Button>
+                                <PurchaseButton projectTitle={project.title} />
                                 <Button variant="outline" size="lg" className="bg-white/50 border-white hover:bg-white">
                                     View Live Demo
                                 </Button>
@@ -243,9 +303,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                                     </div>
                                 </div>
 
-                                <Button variant="accent" size="lg" className="w-full justify-center" rightIcon={<HiChip />}>
-                                    Buy Now
-                                </Button>
+                                <PurchaseButton projectTitle={project.title} variant="accent" className="w-full justify-center" iconType="chip" />
                                 <p className="text-xs text-center text-gray-400 mt-4">Instant Download after Payment</p>
                             </div>
                         </div>

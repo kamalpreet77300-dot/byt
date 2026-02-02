@@ -71,6 +71,69 @@ const SERVICE_DETAILS: Record<string, any> = {
             { name: 'Enterprise', price: 399999, features: ['Full AI Platform', 'Custom Training', 'Scalable Infrastructure', '12 Months Support'] },
         ],
     },
+    'saas-development': {
+        problem: 'Building and scaling software-as-a-service requires complex architecture and multi-tenancy management',
+        solution: 'End-to-end SaaS development with robust multi-tenancy, subscription management, and scalable cloud infrastructure',
+        techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe', 'AWS', 'Docker'],
+        process: [
+            { step: 'Market Analysis', desc: 'Analyzing competition and identifying USP' },
+            { step: 'Architecture', desc: 'Designing multi-tenant scalable architecture' },
+            { step: 'MVP Development', desc: 'Building core features for rapid launch' },
+            { step: 'Testing', desc: 'Security and load testing' },
+            { step: 'Scaling', desc: 'Post-launch monitoring and scaling' },
+        ],
+        caseStudies: [
+            { title: 'HR Management SaaS', result: '1000+ companies onboarded', tech: 'Next.js, Prisma' },
+            { title: 'Fleet Tracking System', result: 'Real-time tracking for 10k+ vehicles', tech: 'Node.js, Redis' },
+        ],
+        pricing: [
+            { name: 'MVP', price: 149999, features: ['Core Features', 'Multi-tenant Auth', 'Stripe Integration', '3 Months Support'] },
+            { name: 'Growth', price: 299999, features: ['Advanced Features', 'Custom Analytics', 'API Access', '6 Months Support'] },
+            { name: 'Enterprise', price: 599999, features: ['Unlimited Scaling', 'White Labeling', 'Priority Support', 'Custom Integrations'] },
+        ],
+    },
+    'api-backend-development': {
+        problem: 'Poorly architected backends lead to slow performance and security vulnerabilities',
+        solution: 'High-performance, secure, and well-documented API and backend systems',
+        techStack: ['Node.js', 'Express', 'FastAPI', 'PostgreSQL', 'Redis', 'Swagger'],
+        process: [
+            { step: 'API Design', desc: 'RESTful/GraphQL API documentation' },
+            { step: 'Database Design', desc: 'Schema optimization and modeling' },
+            { step: 'Core Dev', desc: 'Robust business logic implementation' },
+            { step: 'Security', desc: 'JWT, OAuth, and data encryption' },
+            { step: 'Optimization', desc: 'Caching and query optimization' },
+        ],
+        caseStudies: [
+            { title: 'Payment Gateway API', result: 'Processed ₹10Cr+ monthly', tech: 'Node.js, PostgreSQL' },
+            { title: 'Social Network Backend', result: 'Supported 500k+ concurrent users', tech: 'Python, Redis' },
+        ],
+        pricing: [
+            { name: 'Basic', price: 39999, features: ['10 Endpoints', 'Database Setup', 'JWT Auth', '1 Month Support'] },
+            { name: 'Pro', price: 89999, features: ['Unlimited Endpoints', 'Third-party Integrations', 'Redis Caching', '3 Months Support'] },
+            { name: 'Enterprise', price: 179999, features: ['Microservices Arch', 'High Availability', 'Load Balancing', 'Annual Maintenance'] },
+        ],
+    },
+    'cloud-devops': {
+        problem: 'Manual deployments and unoptimized infrastructure lead to downtime and high costs',
+        solution: 'Automated CI/CD pipelines and optimized cloud infrastructure for maximum uptime',
+        techStack: ['AWS', 'Docker', 'Kubernetes', 'GitHub Actions', 'Terraform', 'Nginx'],
+        process: [
+            { step: 'Audit', desc: 'Analyzing current infra and bottlenecks' },
+            { step: 'Strategy', desc: 'Cloud migration or optimization plan' },
+            { step: 'Automation', desc: 'Setting up CI/CD pipelines' },
+            { step: 'Monitoring', desc: 'Implementing logging and alerts' },
+            { step: 'Hardening', desc: 'Security audits and firewalls' },
+        ],
+        caseStudies: [
+            { title: 'Fintech Migration', result: 'Infrastructure cost reduced by 40%', tech: 'AWS, Terraform' },
+            { title: 'Autoscale Setup', result: 'Zero downtime during 10x traffic surge', tech: 'Kubernetes, Docker' },
+        ],
+        pricing: [
+            { name: 'Starter', price: 29999, features: ['AWS Setup', 'Basic CI/CD', 'Dockerization', '1 Month Support'] },
+            { name: 'Standard', price: 69999, features: ['K8s Cluster', 'Advanced Pipelines', 'Auto-scaling', '3 Months Support'] },
+            { name: 'Enterprise', price: 149999, features: ['24/7 Monitoring', 'Security Hardening', 'Disaster Recovery', 'Priority On-call'] },
+        ],
+    },
 };
 
 export async function generateStaticParams() {
@@ -79,9 +142,10 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function ServiceDetailPage({ params }: { params: { slug: string } }) {
-    const service = SERVICES.find((s) => s.slug === params.slug);
-    const details = SERVICE_DETAILS[params.slug];
+export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const service = SERVICES.find((s) => s.slug === slug);
+    const details = SERVICE_DETAILS[slug];
 
     if (!service || !details) {
         notFound();

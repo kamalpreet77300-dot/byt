@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiClock, HiUsers, HiStar, HiCheckCircle, HiPlay, HiDownload } from 'react-icons/hi';
+import EnrollButton from '@/components/courses/EnrollButton';
 
 const COURSES = [
     {
@@ -114,6 +115,60 @@ const COURSES = [
             'Placement Assistance'
         ]
     },
+    {
+        id: 5,
+        title: 'Python Backend Development',
+        slug: 'python-backend-development',
+        duration: '5 months',
+        students: 390,
+        price: 44999,
+        rating: 4.7,
+        image: '🐍',
+        category: 'Backend',
+        gradient: 'from-green-100 to-emerald-50',
+        description: 'Build robust and scalable backend systems using Python, Django, and FastAPI.',
+        syllabus: [
+            { title: 'Python Core & Advanced', duration: '4 Weeks' },
+            { title: 'Django Web Framework', duration: '6 Weeks' },
+            { title: 'FastAPI & Async Programming', duration: '4 Weeks' },
+            { title: 'PostgreSQL & Redis', duration: '3 Weeks' },
+            { title: 'API Security & Deployment', duration: '3 Weeks' },
+        ],
+        features: [
+            'Expert Python Mentors',
+            'Scalable Architecture',
+            'System Design Basics',
+            'Interview Preparation',
+            'Placement Support'
+        ]
+    },
+    {
+        id: 6,
+        title: 'Mobile App Development',
+        slug: 'mobile-app-development',
+        duration: '6 months',
+        students: 310,
+        price: 49999,
+        rating: 4.8,
+        image: '📱',
+        category: 'Mobile',
+        gradient: 'from-rose-100 to-pink-50',
+        description: 'Master cross-platform mobile app development using React Native and Flutter.',
+        syllabus: [
+            { title: 'React Native Fundamentals', duration: '5 Weeks' },
+            { title: 'Flutter & Dart Basics', duration: '5 Weeks' },
+            { title: 'State Management (Redux/Provider)', duration: '4 Weeks' },
+            { title: 'Native Device Features', duration: '4 Weeks' },
+            { title: 'App Store & Play Store Launch', duration: '6 Weeks' },
+        ],
+        features: [
+            'Two Frameworks in One',
+            'Project-based Learning',
+            'Portfolio Development',
+            'UI/UX for Mobile',
+            'Career Coaching'
+        ]
+    },
 ];
 
 export async function generateStaticParams() {
@@ -122,8 +177,9 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function CourseDetailPage({ params }: { params: { slug: string } }) {
-    const course = COURSES.find((c) => c.slug === params.slug);
+export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const course = COURSES.find((c) => c.slug === slug);
 
     if (!course) {
         notFound();
@@ -167,9 +223,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <Button variant="primary" size="lg" rightIcon={<TiLocationArrow />}>
-                                    Enroll Now
-                                </Button>
+                                <EnrollButton courseTitle={course.title} />
                                 <Button variant="outline" size="lg" className="bg-white/50 border-white hover:bg-white">
                                     Download Syllabus
                                     <HiDownload className="ml-2" />
@@ -227,9 +281,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                                     ))}
                                 </ul>
 
-                                <Button variant="primary" size="lg" className="w-full justify-center">
-                                    Enroll Now
-                                </Button>
+                                <EnrollButton courseTitle={course.title} className="w-full justify-center" />
                                 <p className="text-xs text-center text-gray-400 mt-4">30-Day Money-Back Guarantee</p>
                             </div>
                         </div>

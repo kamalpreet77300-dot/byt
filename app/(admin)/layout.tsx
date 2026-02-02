@@ -24,6 +24,15 @@ export default function AdminLayout({
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const pathname = usePathname();
+    const router = require('next/navigation').useRouter();
+
+    React.useEffect(() => {
+        // Redirecting away from admin as it is no longer needed
+        router.push('/');
+    }, []);
+
+    // Return null or a simple loading state during redirect
+    return null;
 
     const navItems = [
         { name: 'Dashboard', href: '/dashboard', icon: HiHome },

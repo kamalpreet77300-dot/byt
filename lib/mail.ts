@@ -1,0 +1,67 @@
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    },
+});
+
+export const sendLeadEmail = async (data: {
+    type: 'CONTACT' | 'JOB_APPLICATION' | 'COURSE_ENROLLMENT' | 'PROJECT_PURCHASE';
+    subject: string;
+    fromName: string;
+    fromEmail: string;
+    details: Record<string, string>;
+}) => {
+    const companyEmail = 'contact@bytsmartz.com';
+
+    let detailsHtml = '';
+    for (const [key, value] of Object.entries(data.details)) {
+        detailsHtml += `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>${key}:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${value}</td></tr>`;
+    }
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+            <div style="background: linear-gradient(to right, #3b82f6, #8b5cf6); padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="color: white; margin: 0;">BytSmartz Lead</h1>
+                <p style="color: #eee; margin: 5px 0 0;">New ${data.type.replace('_', ' ')} Inquiry</p>
+            </div>
+            
+            <div style="padding: 20px;">
+                <h2 style="color: #333;">Lead Details</h2>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Type:</strong></td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${data.type}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>From:</strong></td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${data.fromName} (${data.fromEmail})</td>
+                    </tr>
+                    ${detailsHtml}
+                </table>
+            </div>
+            
+            <div style="padding: 20px; background: #f9f9f9; text-align: center; border-radius: 0 0 10px 10px;">
+                <p style="color: #666; font-size: 12px; margin: 0;">This is an automated notification from BytSmartz website.</p>
+            </div>
+        </div>
+    `;
+
+    try {
+        await transporter.sendMail({
+            from: `"BytSmartz Leads" <${process.env.SMTP_USER}>`,
+            to: companyEmail,
+            subject: `[LEAD] ${data.subject} - ${data.fromName}`,
+            html: html,
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Error sending lead email:', error);
+        return { success: false, error };
+    }
+};

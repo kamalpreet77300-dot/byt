@@ -81,7 +81,7 @@ const Navbar = () => {
 
                     {/* CTA Button & Mobile Menu */}
                     <div className="flex items-center gap-4">
-                        <Link href="/signup">
+                        {/* <Link href="/signup">
                             <Button
                                 variant="primary"
                                 size="sm"
@@ -90,7 +90,7 @@ const Navbar = () => {
                             >
                                 Get Started
                             </Button>
-                        </Link>
+                        </Link> */}
 
                         {/* Mobile Menu Button */}
                         <button
@@ -112,15 +112,15 @@ const Navbar = () => {
                                     href={item.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={`px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors ${(item.href === '/' && pathname === '/') ||
-                                            (item.href !== '/' && pathname.startsWith(item.href))
-                                            ? 'bg-blue-50 text-blue-600 font-medium'
-                                            : ''
+                                        (item.href !== '/' && pathname.startsWith(item.href))
+                                        ? 'bg-blue-50 text-blue-600 font-medium'
+                                        : ''
                                         }`}
                                 >
                                     {item.name}
                                 </Link>
                             ))}
-                            <Link href="/signup" className="mt-4">
+                            {/* <Link href="/signup" className="mt-4">
                                 <Button
                                     variant="primary"
                                     size="sm"
@@ -129,7 +129,7 @@ const Navbar = () => {
                                 >
                                     Get Started
                                 </Button>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 )}

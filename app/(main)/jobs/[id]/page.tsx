@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
-import { HiLocationMarker, HiBriefcase, HiCurrencyRupee, HiCheck, HiPaperClip, HiCalendar } from 'react-icons/hi';
+import { HiLocationMarker, HiBriefcase, HiCurrencyRupee, HiCheck, HiCalendar } from 'react-icons/hi';
+import JobApplicationForm from '@/components/jobs/JobApplicationForm';
 
 const JOBS = [
     {
@@ -154,8 +155,9 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
-    const job = JOBS.find((j) => j.id.toString() === params.id);
+export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const job = JOBS.find((j) => j.id.toString() === id);
 
     if (!job) {
         notFound();
@@ -175,8 +177,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                         <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
                             <div>
                                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 ${job.type === 'Internship' ? 'bg-blue-100 text-blue-600' :
-                                        job.type === 'Fresher' ? 'bg-green-100 text-green-600' :
-                                            'bg-orange-100 text-orange-600'
+                                    job.type === 'Fresher' ? 'bg-green-100 text-green-600' :
+                                        'bg-orange-100 text-orange-600'
                                     }`}>
                                     {job.type}
                                 </span>
@@ -255,33 +257,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
 
                         {/* Application Form */}
                         <div>
-                            <div className="bg-gray-50 rounded-2xl p-8 sticky top-24 border border-gray-200">
-                                <h2 className="text-2xl font-black mb-6">Apply for this Job</h2>
-                                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                        <input className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" placeholder="John Doe" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                        <input className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" placeholder="john@example.com" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                                        <input className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none" placeholder="+91 98765 43210" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Resume / CV</label>
-                                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-white transition-colors cursor-pointer">
-                                            <HiPaperClip className="mx-auto text-gray-400 text-2xl mb-2" />
-                                            <span className="text-sm text-gray-500">Click to upload PDF</span>
-                                        </div>
-                                    </div>
-                                    <Button variant="primary" size="lg" className="w-full justify-center mt-6">
-                                        Submit Application
-                                    </Button>
-                                </form>
-                            </div>
+                            <JobApplicationForm jobTitle={job.title} jobId={job.id.toString()} />
                         </div>
                     </div>
                 </div>
