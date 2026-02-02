@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { submitContactForm } from '@/app/actions/contact';
 import AnimatedTitle from '@/components/ui/AnimatedTitle';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
@@ -23,16 +24,10 @@ export default function ContactPage() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'CONTACT',
-                    ...formData
-                }),
+            const data = await submitContactForm({
+                type: 'CONTACT',
+                ...formData
             });
-
-            const data = await response.json();
 
             if (data.success) {
                 alert('Thank you for your message! We\'ll get back to you soon.');
@@ -228,12 +223,16 @@ export default function ContactPage() {
                 <div className="container mx-auto px-4 md:px-10">
                     <div className="max-w-6xl mx-auto">
                         <h2 className="text-3xl font-black mb-6 text-center">Visit Our Office</h2>
-                        <div className="bg-white rounded-2xl p-8 border-2 border-gray-200 text-center">
-                            <div className="text-6xl mb-4">🗺️</div>
-                            <p className="text-gray-600">
-                                Interactive map would be embedded here<br />
-                                (Google Maps integration)
-                            </p>
+                        <div className="bg-white rounded-2xl overflow-hidden border-2 border-gray-200 h-[450px]">
+                            <iframe
+                                src="https://maps.google.com/maps?q=Nexa%20Tower%2C%20F-338%2C%20Sector%2074%20A%2C%20Industrial%20Area%2C%20Sector%2074%2C%20Sahibzada%20Ajit%20Singh%20Nagar%2C%20Punjab%20140307&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
                         </div>
                     </div>
                 </div>

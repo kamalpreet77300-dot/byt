@@ -57,12 +57,12 @@ const LaptopScreen = ({ code, lang, isInteracting, isFixing }: { code: string; l
         <group position={[0, -0.05, 0.02]} rotation={[0, 0, 0]}>
             <Text
                 ref={textRef as any}
-                fontSize={0.035}
+                fontSize={0.045}
                 color={isFixing ? "#00ff00" : isInteracting ? "#ffffff" : "#00ffff"}
                 anchorX="center"
                 anchorY="middle"
-                maxWidth={0.5}
-                lineHeight={1.2}
+                maxWidth={1.5}
+                lineHeight={0.8}
                 textAlign="left"
             >
                 {getDisplayText()}
@@ -149,48 +149,49 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, isFixing, 
         bloomPulse.emissiveIntensity = (isInteracting || isFixing ? 5 : 2) + Math.sin(state.clock.elapsedTime * 5) * 1;
 
         // Green color for fixing state
-        if (isFixing) {
-            bloomPulse.color.set("#00ff00");
-            bloomPulse.emissive.set("#00ff00");
-        } else {
-            bloomPulse.color.set("#00ffff");
-            bloomPulse.emissive.set("#00ffff");
+        // if (isFixing) {
+        //     bloomPulse.color.set("#00ff00");
+        //     bloomPulse.emissive.set("#00ff00");
+        // } else {
+        //     bloomPulse.color.set("#00ffff");
+        //     bloomPulse.emissive.set("#00ffff");
+        // }
+
+        // if (isInteracting && interactionPosRef.current) {
+        // Look at interaction target
+        const lookPos = interactionPosRef.current.clone().sub(groupRef.current.position).multiplyScalar(1 / scale);
+        // headRef.current.lookAt(lookPos);
+        // Limit neck rotation for realism
+        // headRef.current.rotation.x = THREE.MathUtils.clamp(headRef.current.rotation.x, -0.4, 0.6);
+        // headRef.current.rotation.y = THREE.MathUtils.clamp(headRef.current.rotation.y, -0.8, 0.8);
+
+        if (rightArmRef.current) {
+            rightArmRef.current.lookAt(lookPos);
+            rightArmRef.current.rotateX(-Math.PI / 2);
         }
-
-        if (isInteracting && interactionPosRef.current) {
-            // Look at interaction target
-            const lookPos = interactionPosRef.current.clone().sub(groupRef.current.position).multiplyScalar(1 / scale);
-            headRef.current.lookAt(lookPos);
-            // Limit neck rotation for realism
-            headRef.current.rotation.x = THREE.MathUtils.clamp(headRef.current.rotation.x, -0.4, 0.6);
-            headRef.current.rotation.y = THREE.MathUtils.clamp(headRef.current.rotation.y, -0.8, 0.8);
-
-            if (rightArmRef.current) {
-                rightArmRef.current.lookAt(lookPos);
-                rightArmRef.current.rotateX(-Math.PI / 2);
-            }
-            if (leftArmRef.current) {
-                leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 30) * 0.1;
-            }
-        } else if (isFixing) {
-            // Fixing Animation (Nodding / Thumbs Up illusion)
-            headRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 15) * 0.2; // Rapid nodding
-            headRef.current.rotation.y = 0;
-
-            // "Typing" or "Fixing" fast arm movement
-            if (leftArmRef.current && rightArmRef.current) {
-                leftArmRef.current.rotation.x = -Math.PI / 3 + Math.sin(state.clock.elapsedTime * 40) * 0.2;
-                rightArmRef.current.rotation.x = -Math.PI / 3 + Math.cos(state.clock.elapsedTime * 40) * 0.2;
-            }
-        } else {
-            headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.3, 0.05);
-            headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, Math.sin(state.clock.elapsedTime * 0.5) * 0.1, 0.05);
-
-            if (leftArmRef.current && rightArmRef.current) {
-                leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 15) * 0.05;
-                rightArmRef.current.rotation.x = -Math.PI / 4 + Math.cos(state.clock.elapsedTime * 15 + 0.5) * 0.05;
-            }
+        if (leftArmRef.current) {
+            leftArmRef.current.rotation.x = -Math.PI / 4;
+            // leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 30) * 0.1;
         }
+        // } else if (isFixing) {
+        // Fixing Animation (Nodding / Thumbs Up illusion)
+        // headRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 15) * 0.2; // Rapid nodding
+        // headRef.current.rotation.y = 0;
+
+        // "Typing" or "Fixing" fast arm movement
+        // if (leftArmRef.current && rightArmRef.current) {
+        //     leftArmRef.current.rotation.x = -Math.PI / 3 + Math.sin(state.clock.elapsedTime * 40) * 0.2;
+        //     rightArmRef.current.rotation.x = -Math.PI / 3 + Math.cos(state.clock.elapsedTime * 40) * 0.2;
+        // }
+        // } else {
+        // headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, 0.3, 0.05);
+        // headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, Math.sin(state.clock.elapsedTime * 0.5) * 0.1, 0.05);
+
+        // if (leftArmRef.current && rightArmRef.current) {
+        //     leftArmRef.current.rotation.x = -Math.PI / 4 + Math.sin(state.clock.elapsedTime * 15) * 0.05;
+        //     rightArmRef.current.rotation.x = -Math.PI / 4 + Math.cos(state.clock.elapsedTime * 15 + 0.5) * 0.05;
+        // }
+        // }
     });
 
     return (
@@ -346,17 +347,17 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, isFixing, 
                     <primitive object={bloomPulse} attach="material" />
                 </mesh>
 
-                <group position={[0, 0, -0.3]} rotation={[Math.PI / 2.2, 0, 0]}>
+                <group position={[0, 0, -0.3]} rotation={[Math.PI / 10.2, 0, 0]}>
                     <RoundedBox args={[0.9, 0.6, 0.03]} radius={0.02} position={[0, 0.3, 0]}>
                         <meshStandardMaterial color="#0f172a" metalness={0.8} />
                     </RoundedBox>
                     {/* Screen Emit */}
                     <mesh position={[0, 0.3, 0.021]}>
                         <planeGeometry args={[0.84, 0.54]} />
-                        <meshStandardMaterial color="#000000" emissive="#00ffff" emissiveIntensity={0.2} transparent opacity={0.5} />
+                        <meshStandardMaterial color="#000000" emissive="#ffffff" emissiveIntensity={0.2} transparent opacity={0.9} />
                     </mesh>
-                    <group position={[0, 0.3, 0.022]}>
-                        <group position={[0, 0.3, 0.022]}>
+                    <group position={[-0.06, 0.15, 0.005]}>
+                        <group position={[0, 0, 0]}>
                             <LaptopScreen code={snippet.code} lang={snippet.lang} isInteracting={isInteracting} isFixing={isFixing} />
                         </group>
                     </group>
@@ -374,8 +375,6 @@ const RobotModel = ({ targetPosRef, interactionPosRef, isInteracting, isFixing, 
 };
 
 export default function RobotMascot() {
-    const targetPosRef = useRef<THREE.Vector3>(new THREE.Vector3(2, 2, 0));
-    const interactionPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const targetPosRef = useRef<THREE.Vector3>(new THREE.Vector3(2, 2, 0));
     const interactionPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [isInteracting, setIsInteracting] = useState(false);

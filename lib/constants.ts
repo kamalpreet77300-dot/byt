@@ -5,7 +5,7 @@ export const SITE_CONFIG = {
     email: 'contact@bytsmartz.com',
     phone: '+91 98881 19100',
     whatsapp: '+919988759100',
-    address: 'Bangalore, Karnataka, India',
+    address: 'Nexa Tower, F-338, Sector 74 A, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307',
 };
 
 export const NAV_ITEMS = [

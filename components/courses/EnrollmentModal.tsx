@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiX } from 'react-icons/hi';
+import { submitContactForm } from '@/app/actions/contact';
 
 interface EnrollmentModalProps {
     courseTitle: string;
@@ -25,18 +26,12 @@ const EnrollmentModal = ({ courseTitle, isOpen, onClose }: EnrollmentModalProps)
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'COURSE_ENROLLMENT',
-                    subject: `Course Enrollment Request: ${courseTitle}`,
-                    ...formData,
-                    courseTitle
-                }),
+            const data = await submitContactForm({
+                type: 'COURSE_ENROLLMENT',
+                subject: `Course Enrollment Request: ${courseTitle}`,
+                ...formData,
+                courseTitle
             });
-
-            const data = await response.json();
 
             if (data.success) {
                 alert('Thank you for your interest! Our team will contact you shortly regarding the enrollment process.');

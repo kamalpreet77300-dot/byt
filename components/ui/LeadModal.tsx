@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiX } from 'react-icons/hi';
+import { submitContactForm } from '@/app/actions/contact';
 
 interface LeadModalProps {
     type: 'CONTACT' | 'JOB_APPLICATION' | 'COURSE_ENROLLMENT' | 'PROJECT_PURCHASE';
@@ -28,18 +29,12 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type,
-                    subject: `${subtitle}: ${title}`,
-                    ...formData,
-                    target: title
-                }),
+            const data = await submitContactForm({
+                type,
+                subject: `${subtitle}: ${title}`,
+                ...formData,
+                target: title
             });
-
-            const data = await response.json();
 
             if (data.success) {
                 alert('Request submitted! We will contact you via email shortly.');

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiPaperClip } from 'react-icons/hi';
+import { submitContactForm } from '@/app/actions/contact';
 
 interface JobApplicationFormProps {
     jobTitle: string;
@@ -22,19 +23,13 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'JOB_APPLICATION',
-                    subject: `Job Application: ${jobTitle}`,
-                    ...formData,
-                    jobId,
-                    jobTitle
-                }),
+            const data = await submitContactForm({
+                type: 'JOB_APPLICATION',
+                subject: `Job Application: ${jobTitle}`,
+                ...formData,
+                jobId,
+                jobTitle
             });
-
-            const data = await response.json();
 
             if (data.success) {
                 alert('Application submitted successfully! Our team will review it and get back to you.');

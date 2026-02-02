@@ -5,7 +5,7 @@ import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaWhatsapp } from 'reac
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 
 const Footer = () => {
-    const currentYear = new Date().getFullYear();
+    const currentYear = 2025;
 
     return (
         <footer className="bg-gradient-to-br from-gray-50 to-blue-50 border-t border-gray-200">
