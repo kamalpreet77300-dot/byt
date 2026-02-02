@@ -303,7 +303,7 @@ const Hero = () => {
                                 <div className="relative z-10">
                                     <HiCode className="text-5xl text-blue-500 mb-3 mx-auto" />
                                     <h3 className="font-bold text-lg mb-2">IT Services</h3>
-                                    <p className="text-sm text-gray-600">Custom development solutions</p>
+                                    <p className="text-sm text-gray-600">Development solutions</p>
                                 </div>
                             </div>
                         </Link>
