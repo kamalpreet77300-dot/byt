@@ -92,6 +92,10 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
             {/* Hero */}
             <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-32 pb-20">
                 <div className="container mx-auto px-4 md:px-10">
+                    <Link href="/services" className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors mb-8">
+                        <TiLocationArrow className="rotate-180" />
+                        <span>Back to Services</span>
+                    </Link>
                     <div className="max-w-4xl mx-auto text-center">
                         <div className="text-7xl mb-6">{service.icon}</div>
                         <h1 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">

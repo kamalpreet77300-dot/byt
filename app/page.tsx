@@ -10,7 +10,7 @@ import Testimonials from '@/components/home/Testimonials';
 export default function Home() {
   return (
     <main className="relative min-h-screen w-screen overflow-x-hidden">
-      <Navbar />
+      {/* <Navbar /> */}
       <Hero />
       <ServicesOverview />
       <PopularCourses />

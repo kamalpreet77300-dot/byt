@@ -27,7 +27,7 @@ const BentoCard: React.FC<BentoCardProps> = ({
             <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
 
             {/* Animated Border Gradient */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+            <div className="absolute animated-titleinset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </div>
 

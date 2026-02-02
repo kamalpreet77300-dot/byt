@@ -238,26 +238,28 @@ const Hero = () => {
     }, []);
 
     return (
-        <div ref={heroRef} className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div ref={heroRef} style={{
+            minHeight: 1200
+        }} className="relative  w-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
             {/* Floating Geometric Shapes */}
             <div ref={floatingShapesRef} className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                 {/* Triangle */}
-                <div className="absolute top-20 left-[10%] w-20 h-20 border-4 border-blue-400 opacity-30" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+                <div className="absolute top-20 left-[10%] w-10 h-10 border-4 border-blue-400 opacity-30" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
 
                 {/* Circle */}
-                <div className="absolute top-40 right-[15%] w-24 h-24 border-4 border-purple-400 rounded-full opacity-30" />
+                <div className="absolute top-40 right-[15%] w-10 h-10 border-4 border-purple-400 rounded-full opacity-30" />
 
                 {/* Square */}
-                <div className="absolute bottom-40 left-[20%] w-16 h-16 border-4 border-pink-400 opacity-30 rotate-45" />
+                <div className="absolute bottom-40 left-[20%] w-10 h-10 border-4 border-pink-400 opacity-30 rotate-45" />
 
                 {/* Hexagon */}
-                <div className="absolute top-60 right-[25%] w-20 h-20 border-4 border-cyan-400 opacity-30" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }} />
+                <div className="absolute top-60 right-[25%] w-10 h-10 border-4 border-cyan-400 opacity-30" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }} />
 
                 {/* Small Circle */}
-                <div className="absolute bottom-60 right-[10%] w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-20" />
+                <div className="absolute bottom-60 right-[10%] w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-20" />
 
                 {/* Diamond */}
-                <div className="absolute top-[30%] left-[5%] w-16 h-16 border-4 border-green-400 opacity-30 rotate-45" />
+                <div className="absolute top-[30%] left-[5%] w-10 h-10 border-4 border-green-400 opacity-30 rotate-45" />
             </div>
 
             {/* Animated Background Blobs */}

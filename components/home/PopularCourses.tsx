@@ -80,7 +80,7 @@ const PopularCourses = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="bg-gray-50/50 py-20 md:py-32 relative overflow-hidden">
+        <section ref={containerRef} className="bg-gray-50/50 py-8 md:py-12 relative overflow-hidden">
             <div className="container mx-auto px-4 md:px-10">
                 {/* Section Header */}
                 <div className="text-center mb-16 space-y-4">

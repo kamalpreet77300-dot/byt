@@ -98,7 +98,7 @@ const FeaturedProjects = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="bg-white py-20 md:py-32 relative overflow-hidden">
+        <section ref={containerRef} className="bg-white py-8 md:py-12 relative overflow-hidden">
             {/* Background Decoration */}
             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-50/50 rounded-full blur-3xl -z-10" />
 

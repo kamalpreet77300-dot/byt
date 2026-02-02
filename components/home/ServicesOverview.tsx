@@ -31,7 +31,7 @@ const ServicesOverview = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="bg-white py-20 md:py-32 relative overflow-hidden">
+        <section ref={containerRef} className="bg-white py-10 md:py-16 relative overflow-hidden">
             {/* Background Gradient */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl -z-10" />
 

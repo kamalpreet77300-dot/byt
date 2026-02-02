@@ -44,7 +44,7 @@ const TESTIMONIALS = [
 
 const Testimonials = () => {
     return (
-        <section className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 md:py-32">
+        <section className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-10 md:py-16">
             <div className="container mx-auto px-4 md:px-10">
                 {/* Section Header */}
                 <div className="text-center mb-16">

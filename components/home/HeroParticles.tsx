@@ -48,7 +48,7 @@ const HeroParticles = () => {
             for (let i = 0; i < particleCount; i++) {
                 const x = Math.random() * canvas.width;
                 const y = Math.random() * canvas.height;
-                const size = Math.random() * 4 + 2;
+                const size = Math.random() * 4 + 1;
                 const color = COLORS[Math.floor(Math.random() * COLORS.length)];
                 const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
 
