@@ -164,7 +164,7 @@ export default function ContactPage() {
                                     <div>
                                         <h3 className="font-bold mb-1">Phone</h3>
                                         <a href={`tel:${SITE_CONFIG.phone}`} className="text-green-600 hover:underline">
-                                            {SITE_CONFIG.phone}
+                                            {SITE_CONFIG.displayPhone}
                                         </a>
                                     </div>
                                 </div>

@@ -82,7 +82,7 @@ const Footer = () => {
                             <li className="flex items-start gap-2 text-gray-600">
                                 <HiPhone className="text-xl mt-0.5 text-blue-500" />
                                 <a href={`tel:${SITE_CONFIG.phone}`} className="hover:text-blue-600 transition-colors">
-                                    {SITE_CONFIG.phone}
+                                    {SITE_CONFIG.displayPhone}
                                 </a>
                             </li>
                             <li className="flex items-start gap-2 text-gray-600">

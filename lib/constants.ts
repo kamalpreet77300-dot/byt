@@ -4,6 +4,7 @@ export const SITE_CONFIG = {
     url: 'https://bytsmartz.com',
     email: 'contact@bytsmartz.com',
     phone: '+919888119100',
+    displayPhone: '+91 98881 19100',
     whatsapp: '+919390220006',
     address: 'Nexa Tower, F-338, Sector 74 A, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307',
 };

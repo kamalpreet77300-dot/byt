@@ -90,8 +90,8 @@ export default function AboutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {[
                             { name: 'Kamal Saini', role: 'CEO & Founder', emoji: '👨‍💼' },
-                            { name: 'Rahul Gandhi', role: 'CTO', emoji: '👨‍💻' },
-                            { name: 'Sandeep Kumar', role: 'BD Manager', emoji: '👨‍🏫' },
+                            { name: 'Rahul Gandhi', role: 'CTO', emoji: '👨‍🏫' },
+                            { name: 'Sandeep Kumar', role: 'BD Manager', emoji: '👨‍💻' },
                         ].map((member, index) => (
                             <div key={index} className="text-center p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 hover:border-blue-500 transition-all hover:scale-105">
                                 <div className="text-8xl mb-4">{member.emoji}</div>
