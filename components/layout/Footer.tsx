@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { SITE_CONFIG, NAV_ITEMS } from '@/lib/constants';
+import { SITE_CONFIG, NAV_ITEMS, SOCIAL_LINKS, IMAGES } from '@/lib/constants';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
+import Image from 'next/image';
 
 const Footer = () => {
     const currentYear = 2025;
@@ -14,25 +15,26 @@ const Footer = () => {
                     {/* Company Info */}
                     <div>
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            {/* <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-bold text-xl">BS</span>
-                            </div>
+                            </div> */}
+                            <Image src={IMAGES.logo} alt="Logo" width={50} height={50} />
                             <span className="font-bold text-xl">{SITE_CONFIG.name}</span>
                         </div>
                         <p className="text-gray-600 mb-4">
                             {SITE_CONFIG.description}
                         </p>
                         <div className="flex gap-3">
-                            <a href="#" className="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors">
+                            <a href={`${SOCIAL_LINKS.facebook}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors">
                                 <FaFacebook />
                             </a>
-                            <a href="#" className="w-10 h-10 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center transition-colors">
+                            <a href={`${SOCIAL_LINKS.twitter}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center transition-colors">
                                 <FaTwitter />
                             </a>
-                            <a href="#" className="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-full flex items-center justify-center transition-colors">
+                            <a href={`${SOCIAL_LINKS.linkedin}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-full flex items-center justify-center transition-colors">
                                 <FaLinkedin />
                             </a>
-                            <a href="#" className="w-10 h-10 bg-pink-500 hover:bg-pink-600 text-white rounded-full flex items-center justify-center transition-colors">
+                            <a href={`${SOCIAL_LINKS.instagram}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-pink-500 hover:bg-pink-600 text-white rounded-full flex items-center justify-center transition-colors">
                                 <FaInstagram />
                             </a>
                         </div>

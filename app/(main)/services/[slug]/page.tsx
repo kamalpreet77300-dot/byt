@@ -19,6 +19,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'Testing', desc: 'Rigorous quality assurance' },
             { step: 'Deployment', desc: 'Launch and ongoing support' },
         ],
+        features: [
+            { title: 'Custom Design', desc: 'Tailor-made designs that reflect your brand identity.' },
+            { title: 'SEO Optimized', desc: 'Built-in best practices to rank higher on search engines.' },
+            { title: 'Responsive Layout', desc: 'Flawless experience on mobile, tablet, and desktop.' },
+            { title: 'CMS Integration', desc: 'Easy content management with Strapi or Sanity.' },
+            { title: 'Performance', desc: 'Blazing fast load times with Next.js optimization.' },
+            { title: 'Security', desc: 'Enterprise-grade security implementation.' },
+        ],
+        benefits: [
+            '100% Client Satisfaction',
+            'On-time Delivery',
+            'Post-launch Support',
+            'Scalable Architecture',
+        ],
+        faq: [
+            { q: 'How long does it take to build a website?', a: 'Typically 4-8 weeks depending on complexity.' },
+            { q: 'Do you provide hosting services?', a: 'Yes, we handle cloud hosting and domain setup.' },
+            { q: 'Can I update the content myself?', a: 'Absolute! We integrate a user-friendly CMS.' },
+        ],
         caseStudies: [
             { title: 'E-Commerce Platform', result: '300% increase in sales', tech: 'Next.js, Stripe' },
             { title: 'SaaS Dashboard', result: '50K+ active users', tech: 'React, Node.js' },
@@ -39,6 +58,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'Development', desc: 'Cross-platform development' },
             { step: 'Testing', desc: 'Device and OS testing' },
             { step: 'Launch', desc: 'App store deployment' },
+        ],
+        features: [
+            { title: 'Native Performance', desc: 'Smooth animations and fast response times.' },
+            { title: 'Offline Mode', desc: 'Functional connectivity even without internet.' },
+            { title: 'Push Notifications', desc: 'Engage users with real-time updates.' },
+            { title: 'App Store Optimization', desc: 'Rank higher in Play Store and App Store.' },
+            { title: 'Cross-Platform', desc: 'One codebase for both iOS and Android.' },
+            { title: 'Analytics', desc: 'Track user behavior and app performance.' },
+        ],
+        benefits: [
+            'Wider Market Reach',
+            'Higher Engagement',
+            'Brand Recognition',
+            'Direct Marketing Channel',
+        ],
+        faq: [
+            { q: 'Do you build for both iOS and Android?', a: 'Yes, we use cross-platform frameworks to target both.' },
+            { q: 'How much does an app cost?', a: 'It varies based on features, but starts from ₹80k.' },
+            { q: 'Do you provide maintenance?', a: 'Yes, we offer ongoing support and updates.' },
         ],
         caseStudies: [
             { title: 'Food Delivery App', result: '100K+ downloads', tech: 'React Native' },
@@ -61,6 +99,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'Integration', desc: 'Deploying into your systems' },
             { step: 'Monitoring', desc: 'Continuous improvement' },
         ],
+        features: [
+            { title: 'Predictive Analytics', desc: 'Forecast trends and make data-driven decisions.' },
+            { title: 'NLP', desc: 'Natural Language Processing for text and speech.' },
+            { title: 'Computer Vision', desc: 'Image and video analysis automation.' },
+            { title: 'Process Automation', desc: 'Automate repetitive tasks with intelligence.' },
+            { title: 'Data Mining', desc: 'Extract valuable insights from large datasets.' },
+            { title: 'Custom Models', desc: 'Tailored ML models for your specific needs.' },
+        ],
+        benefits: [
+            'Data-driven Decisions',
+            'Operational Efficiency',
+            'Competitive Advantage',
+            'Reduced Errors',
+        ],
+        faq: [
+            { q: 'Is my data secure?', a: 'We strictly adhere to data privacy and security protocols.' },
+            { q: 'What is the ROI of AI?', a: 'High efficiency gains often lead to significant cost savings.' },
+            { q: 'Can this integrate with current systems?', a: 'Yes, we build APIs for seamless integration.' },
+        ],
         caseStudies: [
             { title: 'Chatbot System', result: '80% automation rate', tech: 'NLP, GPT' },
             { title: 'Recommendation Engine', result: '45% increase in engagement', tech: 'ML, Python' },
@@ -81,6 +138,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'MVP Development', desc: 'Building core features for rapid launch' },
             { step: 'Testing', desc: 'Security and load testing' },
             { step: 'Scaling', desc: 'Post-launch monitoring and scaling' },
+        ],
+        features: [
+            { title: 'Multi-tenancy', desc: 'Secure data isolation for each customer.' },
+            { title: 'Subscription Management', desc: 'Integrated billing and recurring payments.' },
+            { title: 'Role-Based Access', desc: 'Granular controls for user permissions.' },
+            { title: 'Scalable Infrastructure', desc: 'Auto-scaling to handle growth.' },
+            { title: 'Analytics Dashboard', desc: 'Insights for you and your customers.' },
+            { title: 'API First', desc: 'Easy external integrations.' },
+        ],
+        benefits: [
+            'Recurring Revenue',
+            'Global Accessibility',
+            'Scalability',
+            'Seamless Updates',
+        ],
+        faq: [
+            { q: 'Which payment gateways do you support?', a: 'Stripe, Razorpay, PayPal, and more.' },
+            { q: 'Is it secure?', a: 'Yes, we implement enterprise-grade security standards.' },
+            { q: 'Can you help with scaling?', a: 'Absolutely, our architecture is cloud-native.' },
         ],
         caseStudies: [
             { title: 'HR Management SaaS', result: '1000+ companies onboarded', tech: 'Next.js, Prisma' },
@@ -103,6 +179,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'Security', desc: 'JWT, OAuth, and data encryption' },
             { step: 'Optimization', desc: 'Caching and query optimization' },
         ],
+        features: [
+            { title: 'REST & GraphQL', desc: 'Flexible and standardized API designs.' },
+            { title: 'Microservices', desc: 'Decoupled architecture for maintainability.' },
+            { title: 'Caching', desc: 'Redis implementation for ultra-fast response.' },
+            { title: 'Load Balancing', desc: 'Distribute traffic efficiently.' },
+            { title: 'Swagger Docs', desc: 'Interactive API documentation.' },
+            { title: 'OAuth 2.0', desc: 'Secure authentication standards.' },
+        ],
+        benefits: [
+            'High Performance',
+            'Reliability',
+            'Enhanced Security',
+            'Easy Integration',
+        ],
+        faq: [
+            { q: 'What database do you use?', a: 'PostgreSQL, MongoDB, or whatever fits best.' },
+            { q: 'Do you provide documentation?', a: 'Yes, comprehensive Swagger/OpenAPI docs.' },
+            { q: 'How do you test APIs?', a: 'Automated unit and integration testing.' },
+        ],
         caseStudies: [
             { title: 'Payment Gateway API', result: 'Processed ₹10Cr+ monthly', tech: 'Node.js, PostgreSQL' },
             { title: 'Social Network Backend', result: 'Supported 500k+ concurrent users', tech: 'Python, Redis' },
@@ -123,6 +218,25 @@ const SERVICE_DETAILS: Record<string, any> = {
             { step: 'Automation', desc: 'Setting up CI/CD pipelines' },
             { step: 'Monitoring', desc: 'Implementing logging and alerts' },
             { step: 'Hardening', desc: 'Security audits and firewalls' },
+        ],
+        features: [
+            { title: 'CI/CD Pipelines', desc: 'Automate build, test, and deployment.' },
+            { title: 'Infrastructure as Code', desc: 'Manage infra with Terraform/Ansible.' },
+            { title: 'Containerization', desc: 'Docker/Kubernetes for consistency.' },
+            { title: 'Monitoring', desc: 'Real-time metrics with Prometheus/Grafana.' },
+            { title: 'Auto-scaling', desc: 'Handle traffic spikes automatically.' },
+            { title: 'Security Audits', desc: 'Identify and patch vulnerabilities.' },
+        ],
+        benefits: [
+            'Faster Time to Market',
+            'Reduced Cloud Costs',
+            '99.9% Uptime',
+            'Improved Security',
+        ],
+        faq: [
+            { q: 'Which cloud providers?', a: 'AWS, Azure, Google Cloud, and DigitalOcean.' },
+            { q: 'Do you handle migration?', a: 'Yes, we manage zero-downtime migrations.' },
+            { q: 'Is there 24/7 support?', a: 'Yes, in our enterprise packages.' },
         ],
         caseStudies: [
             { title: 'Fintech Migration', result: 'Infrastructure cost reduced by 40%', tech: 'AWS, Terraform' },
@@ -219,6 +333,51 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                                 </div>
                                 <h3 className="font-bold text-lg mb-2">{item.step}</h3>
                                 <p className="text-sm text-gray-600">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Key Features */}
+            <section className="bg-gray-50 py-20">
+                <div className="container mx-auto px-4 md:px-10">
+                    <h2 className="text-4xl md:text-5xl font-black text-center mb-12">Key Features</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {details.features.map((feature: any, index: number) => (
+                            <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                                <h3 className="text-xl font-bold mb-3 text-blue-600">{feature.title}</h3>
+                                <p className="text-gray-600">{feature.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Choose Us */}
+            <section className="bg-white py-20">
+                <div className="container mx-auto px-4 md:px-10">
+                    <h2 className="text-4xl md:text-5xl font-black text-center mb-12">Why Choose Us</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                        {details.benefits.map((benefit: string, index: number) => (
+                            <div key={index} className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                                <HiCheckCircle className="text-blue-600 text-2xl flex-shrink-0" />
+                                <span className="font-bold text-gray-800">{benefit}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ */}
+            <section className="bg-white py-20 border-t border-gray-100">
+                <div className="container mx-auto px-4 md:px-10 max-w-4xl">
+                    <h2 className="text-4xl md:text-5xl font-black text-center mb-12">Frequently Asked Questions</h2>
+                    <div className="space-y-6">
+                        {details.faq.map((item: any, index: number) => (
+                            <div key={index} className="bg-gray-50 p-6 rounded-2xl">
+                                <h3 className="text-xl font-bold mb-2 text-gray-900">{item.q}</h3>
+                                <p className="text-gray-600">{item.a}</p>
                             </div>
                         ))}
                     </div>

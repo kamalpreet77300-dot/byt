@@ -8,6 +8,14 @@ export const SITE_CONFIG = {
     address: 'Nexa Tower, F-338, Sector 74 A, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307',
 };
 
+export const SOCIAL_LINKS = {
+    whatsapp: 'https://wa.me/919390220006',
+    facebook: 'https://www.facebook.com/bytsmartz',
+    twitter: 'https://twitter.com',
+    linkedin: 'https://www.linkedin.com',
+    instagram: 'https://www.instagram.com/smartzbyt',
+}
+
 export const NAV_ITEMS = [
     { name: 'Home', href: '/' },
     { name: 'Services', href: '/services' },

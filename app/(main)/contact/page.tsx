@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
-import { SITE_CONFIG } from '@/lib/constants';
+import { SITE_CONFIG, SOCIAL_LINKS } from '@/lib/constants';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -194,10 +194,10 @@ export default function ContactPage() {
                                     <h3 className="font-bold mb-4">Follow Us</h3>
                                     <div className="flex gap-4">
                                         {[
-                                            { icon: FaFacebook, color: 'text-blue-600', link: '#' },
-                                            { icon: FaTwitter, color: 'text-sky-500', link: '#' },
-                                            { icon: FaLinkedin, color: 'text-blue-700', link: '#' },
-                                            { icon: FaInstagram, color: 'text-pink-600', link: '#' },
+                                            { icon: FaFacebook, color: 'text-blue-600', link: SOCIAL_LINKS.facebook },
+                                            { icon: FaTwitter, color: 'text-sky-500', link: SOCIAL_LINKS.twitter },
+                                            { icon: FaLinkedin, color: 'text-blue-700', link: SOCIAL_LINKS.linkedin },
+                                            { icon: FaInstagram, color: 'text-pink-600', link: SOCIAL_LINKS.instagram },
                                         ].map((social, index) => (
                                             <a
                                                 key={index}
