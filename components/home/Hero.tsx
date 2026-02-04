@@ -279,7 +279,7 @@ const Hero = () => {
                     {/* Main Heading */}
                     <h1
                         ref={headingRef}
-                        className="hero-heading mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                        className="hero-heading mb-6 bg-gradient-to-r from-[#FF9D00] via-[#ED0B60] to-[#2563EB] bg-clip-text text-transparent"
                         style={{ perspective: '1000px' }}
                     >
                         Transform Your <br />
@@ -373,7 +373,7 @@ const Hero = () => {
                         { number: '98%', label: 'Client Satisfaction' },
                     ].map((stat, index) => (
                         <div key={index} className="text-center p-4 rounded-xl bg-white/50 backdrop-blur-sm border border-gray-200 hover:scale-110 transition-transform duration-300">
-                            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                            <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-[#FF9D00] to-[#2563EB] bg-clip-text text-transparent mb-2">
                                 {stat.number}
                             </div>
                             <div className="text-sm text-gray-600 font-medium">{stat.label}</div>

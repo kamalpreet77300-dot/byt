@@ -10,6 +10,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+
 export const sendLeadEmail = async (data: {
     type: 'CONTACT' | 'JOB_APPLICATION' | 'COURSE_ENROLLMENT' | 'PROJECT_PURCHASE';
     subject: string;
@@ -21,7 +23,13 @@ export const sendLeadEmail = async (data: {
 
     let detailsHtml = '';
     for (const [key, value] of Object.entries(data.details)) {
-        detailsHtml += `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>${key}:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${value}</td></tr>`;
+        if (!value) continue;
+        const isUrl = typeof value === 'string' && value.startsWith('http');
+        const displayValue = isUrl
+            ? `<a href="${value}" target="_blank" style="color: #3b82f6; text-decoration: underline;">View Attachment</a>`
+            : value;
+
+        detailsHtml += `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>${key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${displayValue}</td></tr>`;
     }
 
     const html = `
@@ -54,7 +62,7 @@ export const sendLeadEmail = async (data: {
 
     try {
         await transporter.sendMail({
-            from: `"BytSmartz Leads" <${process.env.SMTP_USER}>`,
+            from: process.env.SMTP_FROM || 'no-reply@bytsmartz.com',
             to: companyEmail,
             subject: `[LEAD] ${data.subject} - ${data.fromName}`,
             html: html,
