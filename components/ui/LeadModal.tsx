@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiX } from 'react-icons/hi';
-import { submitContactForm } from '@/app/actions/contact';
 import { toast } from 'react-toastify';
 
 interface LeadModalProps {
@@ -118,12 +117,20 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
         setIsSubmitting(true);
 
         try {
-            const data = await submitContactForm({
-                type,
-                subject: `${subtitle}: ${title}`,
-                ...formData,
-                target: title
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type,
+                    subject: `${subtitle}: ${title}`,
+                    ...formData,
+                    target: title
+                }),
             });
+
+            const data = await response.json();
 
             if (data.success) {
                 toast.success('Your message has been sent successfully!');

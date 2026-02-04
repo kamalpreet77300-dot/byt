@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiPaperClip } from 'react-icons/hi';
-import { submitContactForm } from '@/app/actions/contact';
 import { toast } from 'react-toastify';
 
 interface JobApplicationFormProps {
@@ -108,13 +107,21 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
         setIsSubmitting(true);
 
         try {
-            const data = await submitContactForm({
-                type: 'JOB_APPLICATION',
-                subject: `Job Application: ${jobTitle}`,
-                ...formData,
-                jobId,
-                jobTitle
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'JOB_APPLICATION',
+                    subject: `Job Application: ${jobTitle}`,
+                    ...formData,
+                    jobId,
+                    jobTitle
+                }),
             });
+
+            const data = await response.json();
 
             if (data.success) {
                 toast.success('Your application has been submitted successfully!');
