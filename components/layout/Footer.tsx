@@ -61,10 +61,10 @@ const Footer = () => {
                     <div>
                         <h3 className="font-bold text-lg mb-4">Our Services</h3>
                         <ul className="space-y-2">
-                            <li><Link href="/services/web-development" className="text-gray-600 hover:text-blue-600 transition-colors">Web Development</Link></li>
-                            <li><Link href="/services/mobile-app-development" className="text-gray-600 hover:text-blue-600 transition-colors">Mobile Apps</Link></li>
-                            <li><Link href="/services/ai-ml-solutions" className="text-gray-600 hover:text-blue-600 transition-colors">AI/ML Solutions</Link></li>
-                            <li><Link href="/services/saas-development" className="text-gray-600 hover:text-blue-600 transition-colors">SaaS Development</Link></li>
+                            <li><Link href="/services" className="text-gray-600 hover:text-blue-600 transition-colors">Web Development</Link></li>
+                            <li><Link href="/services" className="text-gray-600 hover:text-blue-600 transition-colors">Mobile Apps</Link></li>
+                            <li><Link href="/services" className="text-gray-600 hover:text-blue-600 transition-colors">AI/ML Solutions</Link></li>
+                            <li><Link href="/services" className="text-gray-600 hover:text-blue-600 transition-colors">SaaS Development</Link></li>
                             <li><Link href="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">Training Courses</Link></li>
                         </ul>
                     </div>
@@ -110,10 +110,10 @@ const Footer = () => {
                         © {currentYear} {SITE_CONFIG.name}. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-sm">
-                        <Link href="/privacy" className="text-gray-600 hover:text-blue-600 transition-colors">
+                        <Link href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
                             Privacy Policy
                         </Link>
-                        <Link href="/terms" className="text-gray-600 hover:text-blue-600 transition-colors">
+                        <Link href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
                             Terms of Service
                         </Link>
                     </div>

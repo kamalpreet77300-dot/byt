@@ -9,6 +9,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LeadModal from '../ui/LeadModal';
+import AnimatedTitle from '../ui/AnimatedTitle';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,9 +117,10 @@ const FeaturedProjects = () => {
                     <p className="font-general text-xs uppercase text-green-600 font-bold tracking-widest">
                         Marketplace
                     </p>
-                    <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                        Featured Projects
-                    </h2>
+                    <AnimatedTitle
+                        title="Featured</br> Projects"
+                        containerClass="mt-5 !text-black text-center text-4xl md:text-6xl font-black"
+                    />
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Production-ready source code with complete documentation, perfect for learning or starting your business
                     </p>

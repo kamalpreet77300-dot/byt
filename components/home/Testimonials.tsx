@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { HiStar } from 'react-icons/hi';
+import AnimatedTitle from '../ui/AnimatedTitle';
 
 const TESTIMONIALS = [
     {
@@ -48,9 +49,10 @@ const Testimonials = () => {
             <div className="container mx-auto px-4 md:px-10">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Success Stories
-                    </h2>
+                    <AnimatedTitle
+                        title="Success <b>Stories</b>"
+                        containerClass="mt-5 !text-black text-center text-4xl md:text-6xl font-black mb-8"
+                    />
                     <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
                         Hear from our students who transformed their careers
                     </p>

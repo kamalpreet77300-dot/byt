@@ -9,6 +9,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LeadModal from '../ui/LeadModal';
+import AnimatedTitle from '../ui/AnimatedTitle';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,9 +96,10 @@ const PopularCourses = () => {
                     <p className="font-general text-xs uppercase text-purple-600 font-bold tracking-widest">
                         Top Rated Programs
                     </p>
-                    <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                        Popular Courses
-                    </h2>
+                    <AnimatedTitle
+                        title="Popular</br> Courses"
+                        containerClass="mt-5 !text-black text-center text-4xl md:text-6xl font-black"
+                    />
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Industry-leading training programs designed by experts to fast-track your career
                     </p>

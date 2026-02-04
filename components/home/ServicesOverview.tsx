@@ -53,7 +53,7 @@ const ServicesOverview = () => {
                 {/* Bento Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
                     {SERVICES.map((service, index) => (
-                        <Link key={service.id} href={`/services/${service.slug}`} className="bento-item opacity-0 translate-y-10">
+                        <Link key={service.id} href={`/services`} className="bento-item opacity-0 translate-y-10">
                             <BentoCard
                                 title={service.title}
                                 description={service.shortDesc}
