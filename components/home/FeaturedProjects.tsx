@@ -8,6 +8,7 @@ import { HiCode, HiChip } from 'react-icons/hi';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LeadModal from '../ui/LeadModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -82,6 +83,13 @@ const FEATURED_PROJECTS = [
 
 const FeaturedProjects = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [selectedProject, setSelectedProject] = React.useState<typeof FEATURED_PROJECTS[0] | null>(null);
+
+    const handleBuy = (project: typeof FEATURED_PROJECTS[0]) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+    };
 
     useGSAP(() => {
         gsap.to('.project-card', {
@@ -119,7 +127,7 @@ const FeaturedProjects = () => {
                 {/* Projects Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {FEATURED_PROJECTS.map((project) => (
-                        <Link key={project.id} href={`/projects/${project.slug}`}>
+                        <div key={project.id} onClick={() => handleBuy(project)} className="cursor-pointer">
                             <div className="project-card opacity-0 translate-y-10 group h-full bg-white rounded-3xl border border-gray-100 shadow-lg shadow-gray-100 hover:shadow-2xl hover:shadow-green-100/50 p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden">
                                 {/* Hover Gradient */}
                                 <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10`} />
@@ -164,7 +172,7 @@ const FeaturedProjects = () => {
                                     </Button>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
 
@@ -177,6 +185,14 @@ const FeaturedProjects = () => {
                     </Link>
                 </div>
             </div>
+
+            <LeadModal
+                type="PROJECT_PURCHASE"
+                title={selectedProject?.title || ''}
+                subtitle="Purchase Project"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </section>
     );
 };

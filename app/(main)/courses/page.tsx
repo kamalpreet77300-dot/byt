@@ -7,6 +7,7 @@ import StaggerCards from '@/components/ui/StaggerCards';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiClock, HiUsers, HiStar, HiAcademicCap } from 'react-icons/hi';
+import LeadModal from '@/components/ui/LeadModal';
 
 const COURSES = [
     {
@@ -111,6 +112,13 @@ const CATEGORIES = ['All', 'Web Development', 'AI/ML', 'Frontend', 'Backend', 'D
 
 export default function CoursesPage() {
     const [selectedCategory, setSelectedCategory] = React.useState('All');
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [selectedCourse, setSelectedCourse] = React.useState<typeof COURSES[0] | null>(null);
+
+    const handleEnroll = (course: typeof COURSES[0]) => {
+        setSelectedCourse(course);
+        setIsModalOpen(true);
+    };
 
     const filteredCourses = selectedCategory === 'All'
         ? COURSES
@@ -148,8 +156,8 @@ export default function CoursesPage() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${selectedCategory === category
-                                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg scale-105'
-                                        : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-500'
+                                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg scale-105'
+                                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-500'
                                     }`}
                             >
                                 {category}
@@ -160,8 +168,8 @@ export default function CoursesPage() {
                     {/* Courses Grid */}
                     <StaggerCards className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredCourses.map((course) => (
-                            <Link key={course.id} href={`/courses/${course.slug}`}>
-                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-purple-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer h-full flex flex-col">
+                            <div key={course.id} className="h-full">
+                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-purple-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col">
                                     {/* Icon & Badge */}
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="text-6xl">{course.image}</div>
@@ -224,12 +232,16 @@ export default function CoursesPage() {
                                                 ₹{(course.discountPrice / 1000).toFixed(0)}k
                                             </span>
                                         </div>
-                                        <Button variant="primary" size="sm">
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={() => handleEnroll(course)}
+                                        >
                                             Enroll Now
                                         </Button>
                                     </div>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </StaggerCards>
                 </div>
@@ -274,6 +286,14 @@ export default function CoursesPage() {
                     </Link>
                 </div>
             </section>
+
+            <LeadModal
+                type="COURSE_ENROLLMENT"
+                title={selectedCourse?.title || ''}
+                subtitle="Enroll in Course"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </main>
     );
 }

@@ -7,6 +7,7 @@ import StaggerCards from '@/components/ui/StaggerCards';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiLocationMarker, HiBriefcase, HiClock, HiCurrencyRupee } from 'react-icons/hi';
+import LeadModal from '@/components/ui/LeadModal';
 
 const JOBS = [
     {
@@ -81,6 +82,13 @@ const JOB_TYPES = ['All', 'Full-time', 'Part-time', 'Internship', 'Fresher'];
 
 export default function JobsPage() {
     const [selectedType, setSelectedType] = useState('All');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedJob, setSelectedJob] = useState<typeof JOBS[0] | null>(null);
+
+    const handleApply = (job: typeof JOBS[0]) => {
+        setSelectedJob(job);
+        setIsModalOpen(true);
+    };
 
     const filteredJobs = selectedType === 'All'
         ? JOBS
@@ -116,8 +124,8 @@ export default function JobsPage() {
                                 key={type}
                                 onClick={() => setSelectedType(type)}
                                 className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${selectedType === type
-                                        ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg scale-105'
-                                        : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-500'
+                                    ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg scale-105'
+                                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-500'
                                     }`}
                             >
                                 {type}
@@ -128,13 +136,13 @@ export default function JobsPage() {
                     {/* Jobs Grid */}
                     <StaggerCards className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredJobs.map((job) => (
-                            <Link key={job.id} href={`/jobs/${job.id}`}>
-                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-orange-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer h-full flex flex-col">
+                            <div key={job.id} className="h-full">
+                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-orange-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col">
                                     {/* Type Badge */}
                                     <div className="flex items-center justify-between mb-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${job.type === 'Internship' ? 'bg-blue-100 text-blue-600' :
-                                                job.type === 'Fresher' ? 'bg-green-100 text-green-600' :
-                                                    'bg-orange-100 text-orange-600'
+                                            job.type === 'Fresher' ? 'bg-green-100 text-green-600' :
+                                                'bg-orange-100 text-orange-600'
                                             }`}>
                                             {job.type}
                                         </span>
@@ -177,11 +185,16 @@ export default function JobsPage() {
                                     </div>
 
                                     {/* CTA */}
-                                    <Button variant="primary" size="sm" className="w-full">
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        className="w-full"
+                                        onClick={() => handleApply(job)}
+                                    >
                                         Apply Now
                                     </Button>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </StaggerCards>
                 </div>
@@ -226,6 +239,14 @@ export default function JobsPage() {
                     </Link>
                 </div>
             </section>
+
+            <LeadModal
+                type="JOB_APPLICATION"
+                title={selectedJob?.title || ''}
+                subtitle="Apply for Job"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </main>
     );
 }

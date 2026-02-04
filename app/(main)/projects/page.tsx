@@ -7,6 +7,7 @@ import StaggerCards from '@/components/ui/StaggerCards';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiCode, HiShoppingCart } from 'react-icons/hi';
+import LeadModal from '@/components/ui/LeadModal';
 
 const PROJECTS = [
     {
@@ -132,6 +133,13 @@ const CATEGORIES = ['All', 'Web Apps', 'Mobile Apps', 'AI/ML', 'SaaS', 'Final Ye
 
 export default function ProjectsPage() {
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProject, setSelectedProject] = useState<typeof PROJECTS[0] | null>(null);
+
+    const handleBuy = (project: typeof PROJECTS[0]) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+    };
 
     const filteredProjects = selectedCategory === 'All'
         ? PROJECTS
@@ -167,8 +175,8 @@ export default function ProjectsPage() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${selectedCategory === category
-                                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg scale-105'
-                                        : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-green-500'
+                                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg scale-105'
+                                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-green-500'
                                     }`}
                             >
                                 {category}
@@ -179,8 +187,8 @@ export default function ProjectsPage() {
                     {/* Projects Grid */}
                     <StaggerCards className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredProjects.map((project) => (
-                            <Link key={project.id} href={`/projects/${project.slug}`}>
-                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-green-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer h-full flex flex-col">
+                            <div key={project.id} className="h-full">
+                                <div className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-green-500 p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col">
                                     {/* Icon & Stats */}
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="text-6xl">{project.image}</div>
@@ -229,12 +237,16 @@ export default function ProjectsPage() {
                                         <span className="text-2xl font-black text-green-600">
                                             ₹{(project.price / 1000).toFixed(0)}k
                                         </span>
-                                        <Button variant="accent" size="sm">
+                                        <Button
+                                            variant="accent"
+                                            size="sm"
+                                            onClick={() => handleBuy(project)}
+                                        >
                                             Buy Now
                                         </Button>
                                     </div>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </StaggerCards>
                 </div>
@@ -279,6 +291,14 @@ export default function ProjectsPage() {
                     </Link>
                 </div>
             </section>
-        </main>
+
+            <LeadModal
+                type="PROJECT_PURCHASE"
+                title={selectedProject?.title || ''}
+                subtitle="Purchase Project"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
+        </main >
     );
 }

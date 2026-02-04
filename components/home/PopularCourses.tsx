@@ -8,6 +8,7 @@ import { HiClock, HiUsers, HiStar } from 'react-icons/hi';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LeadModal from '../ui/LeadModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,6 +65,13 @@ const POPULAR_COURSES = [
 
 const PopularCourses = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [selectedCourse, setSelectedCourse] = React.useState<typeof POPULAR_COURSES[0] | null>(null);
+
+    const handleEnroll = (course: typeof POPULAR_COURSES[0]) => {
+        setSelectedCourse(course);
+        setIsModalOpen(true);
+    };
 
     useGSAP(() => {
         gsap.to('.course-card', {
@@ -98,7 +106,7 @@ const PopularCourses = () => {
                 {/* Courses Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                     {POPULAR_COURSES.map((course) => (
-                        <Link key={course.id} href={`/courses/${course.slug}`}>
+                        <div key={course.id} onClick={() => handleEnroll(course)} className="cursor-pointer">
                             <div className={`course-card opacity-0 translate-y-10 h-full group bg-white rounded-3xl p-6 border border-gray-100 shadow-lg shadow-gray-100 hover:shadow-xl hover:shadow-purple-100 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden`}>
                                 {/* Gradient Background on Hover */}
                                 <div className={`absolute inset-0 bg-gradient-to-br ${course.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`} />
@@ -149,7 +157,7 @@ const PopularCourses = () => {
                                     </div>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
 
@@ -162,6 +170,14 @@ const PopularCourses = () => {
                     </Link>
                 </div>
             </div>
+
+            <LeadModal
+                type="COURSE_ENROLLMENT"
+                title={selectedCourse?.title || ''}
+                subtitle="Enroll in Course"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </section>
     );
 };
