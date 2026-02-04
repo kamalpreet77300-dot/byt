@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiPaperClip } from 'react-icons/hi';
 import { submitContactForm } from '@/app/actions/contact';
+import { toast } from 'react-toastify';
 
 interface JobApplicationFormProps {
     jobTitle: string;
@@ -52,12 +53,12 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
             file.name.toLowerCase().endsWith('.docx');
 
         if (!isWord) {
-            alert('Please upload a Word document (.doc, .docx)');
+            toast.error('Please upload a Word document (.doc, .docx)');
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) {
-            alert('File size should be less than 5MB');
+            toast.error('File size should be less than 5MB');
             return;
         }
 
@@ -66,7 +67,7 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
         const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
         if (!cloudName || cloudName === 'your_cloud_name') {
-            alert('Cloudinary is not configured. Please add cloud name in .env');
+            toast.error('Cloudinary is not configured. Please contact support.');
             setIsUploading(false);
             return;
         }
@@ -89,11 +90,11 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
                     return next;
                 });
             } else {
-                alert('Upload failed. Please try again.');
+                toast.error('Upload failed. Please try again.');
             }
         } catch (error) {
             console.error('Upload Error:', error);
-            alert('Error uploading file.');
+            toast.error('Error uploading file.');
         } finally {
             setIsUploading(false);
         }
@@ -116,15 +117,15 @@ const JobApplicationForm = ({ jobTitle, jobId }: JobApplicationFormProps) => {
             });
 
             if (data.success) {
-                alert('Application submitted successfully! Our team will review it and get back to you.');
+                toast.success('Your application has been submitted successfully!');
                 setFormData({ name: '', email: '', phone: '', resumeUrl: '' });
                 setErrors({});
             } else {
-                alert('Failed to submit application. Please try again.');
+                toast.error('Failed to submit application. Please try again later.');
             }
         } catch (error) {
             console.error('Submission error:', error);
-            alert('Error submitting application.');
+            toast.error('Failed to submit application. Please try again later.');
         } finally {
             setIsSubmitting(false);
         }

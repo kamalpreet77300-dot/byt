@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiX } from 'react-icons/hi';
 import { submitContactForm } from '@/app/actions/contact';
+import { toast } from 'react-toastify';
 
 interface LeadModalProps {
     type: 'CONTACT' | 'JOB_APPLICATION' | 'COURSE_ENROLLMENT' | 'PROJECT_PURCHASE';
@@ -59,12 +60,12 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
             file.name.toLowerCase().endsWith('.docx');
 
         if (!isWord) {
-            alert('Please upload a Word document (.doc, .docx)');
+            toast.error('Please upload a Word document (.doc, .docx)');
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            alert('File size should be less than 5MB');
+            toast.error('File size should be less than 5MB');
             return;
         }
 
@@ -73,7 +74,7 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
         const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
         if (!cloudName || cloudName === 'your_cloud_name') {
-            alert('Cloudinary is not configured. Please add cloud name in .env');
+            toast.error('Cloudinary is not configured. Please contact support.');
             setIsUploading(false);
             return;
         }
@@ -125,14 +126,21 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
             });
 
             if (data.success) {
-                alert('Request submitted! We will contact you via email shortly.');
+                toast.success('Your message has been sent successfully!');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    message: '',
+                    resumeUrl: ''
+                });
                 onClose();
             } else {
-                alert('Something went wrong. Please try again.');
+                toast.error('Failed to send message. Please try again later.');
             }
         } catch (error) {
             console.error('Lead submission error:', error);
-            alert('Failed to submit request.');
+            toast.error('Failed to send message. Please try again later.');
         } finally {
             setIsSubmitting(false);
         }

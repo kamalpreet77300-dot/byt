@@ -1,16 +1,6 @@
+'use server';
+
 import nodemailer from 'nodemailer';
-
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-    },
-});
-
-
 
 export const sendLeadEmail = async (data: {
     type: 'CONTACT' | 'JOB_APPLICATION' | 'COURSE_ENROLLMENT' | 'PROJECT_PURCHASE';
@@ -19,7 +9,7 @@ export const sendLeadEmail = async (data: {
     fromEmail: string;
     details: Record<string, string>;
 }) => {
-    const companyEmail = 'contact@bytsmartz.com';
+    const companyEmail = process.env.COMPANY_EMAIL || 'contact@bytsmartz.com';
 
     let detailsHtml = '';
     for (const [key, value] of Object.entries(data.details)) {
@@ -35,6 +25,7 @@ export const sendLeadEmail = async (data: {
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
             <div style="background: linear-gradient(to right, #3b82f6, #8b5cf6); padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <img src="https://byt-tan.vercel.app/images/logo.png" alt="BytSmartz Logo" style="width: 150px; height: auto; margin-bottom: 10px; filter: brightness(0) invert(1);">
                 <h1 style="color: white; margin: 0;">BytSmartz Lead</h1>
                 <p style="color: #eee; margin: 5px 0 0;">New ${data.type.replace('_', ' ')} Inquiry</p>
             </div>
@@ -61,9 +52,20 @@ export const sendLeadEmail = async (data: {
     `;
 
     try {
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+            port: parseInt(process.env.SMTP_PORT || '587'),
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
         await transporter.sendMail({
-            from: process.env.SMTP_FROM || 'no-reply@bytsmartz.com',
+            from: `"BytSmartz Leads" <${process.env.SMTP_FROM || companyEmail}>`,
             to: companyEmail,
+            replyTo: data.fromEmail,
             subject: `[LEAD] ${data.subject} - ${data.fromName}`,
             html: html,
         });

@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import RobotMascot from "@/components/ui/RobotMascot";
 import Footer from "@/components/layout/Footer";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,7 +49,20 @@ export default function RootLayout({
         {children}
         <RobotMascot />
         <Footer />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </body>
+
     </html>
   );
 }
