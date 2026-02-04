@@ -122,5 +122,5 @@ export const TECH_STACK = [
 ];
 
 export const IMAGES = {
-    logo: '/images/logo.jpg',
+    logo: '/images/logo-bs.png',
 }

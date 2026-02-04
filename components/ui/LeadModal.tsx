@@ -66,7 +66,7 @@ const LeadModal = ({ type, title, subtitle, isOpen, onClose }: LeadModalProps) =
 
                 <h2 className="text-2xl font-black mb-2">{subtitle}</h2>
                 <p className="text-gray-600 mb-6 font-medium">
-                    Target: <span className="text-blue-600 font-bold">{title}</span>
+                    <span className="text-blue-600 font-bold">{title}</span>
                 </p>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
