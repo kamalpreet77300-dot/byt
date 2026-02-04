@@ -3,6 +3,7 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import RobotMascot from "@/components/ui/RobotMascot";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +45,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <RobotMascot />
+        <Footer />
       </body>
     </html>
   );

@@ -3,11 +3,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_ITEMS, SITE_CONFIG } from '@/lib/constants';
+import { IMAGES, NAV_ITEMS, SITE_CONFIG } from '@/lib/constants';
 import Button from '../ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiMenu, HiX } from 'react-icons/hi';
 import gsap from 'gsap';
+import Image from 'next/image';
 
 const Navbar = () => {
     const navContainerRef = useRef<HTMLDivElement>(null);
@@ -56,9 +57,10 @@ const Navbar = () => {
                 <nav className="flex size-full items-center justify-between p-4">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        {/* <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-xl">BS</span>
-                        </div>
+                        </div> */}
+                        <Image src={IMAGES.logo} alt="Logo" width={50} height={50} />
                         <span className="font-bold text-xl hidden sm:block">{SITE_CONFIG.name}</span>
                     </Link>
 

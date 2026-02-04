@@ -112,3 +112,7 @@ export const TECH_STACK = [
     'Docker',
     'Kubernetes',
 ];
+
+export const IMAGES = {
+    logo: '/images/logo.jpg',
+}
