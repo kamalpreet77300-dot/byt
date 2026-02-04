@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -152,8 +153,8 @@ export default function ContactPage() {
                                     <HiMail className="text-3xl text-blue-600 mt-1" />
                                     <div>
                                         <h3 className="font-bold mb-1">Email</h3>
-                                        <a href="mailto:contact@bytsmartz.com" className="text-blue-600 hover:underline">
-                                            contact@bytsmartz.com
+                                        <a href={`mailto:${SITE_CONFIG.email}`} className="text-blue-600 hover:underline">
+                                            {SITE_CONFIG.email}
                                         </a>
                                     </div>
                                 </div>
@@ -162,8 +163,8 @@ export default function ContactPage() {
                                     <HiPhone className="text-3xl text-green-600 mt-1" />
                                     <div>
                                         <h3 className="font-bold mb-1">Phone</h3>
-                                        <a href="tel:+919876543210" className="text-green-600 hover:underline">
-                                            +91 98765 43210
+                                        <a href={`tel:${SITE_CONFIG.phone}`} className="text-green-600 hover:underline">
+                                            {SITE_CONFIG.phone}
                                         </a>
                                     </div>
                                 </div>
@@ -172,7 +173,7 @@ export default function ContactPage() {
                                     <FaWhatsapp className="text-3xl text-green-600 mt-1" />
                                     <div>
                                         <h3 className="font-bold mb-1">WhatsApp</h3>
-                                        <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
+                                        <a href={`https://wa.me/${SITE_CONFIG.whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
                                             Chat with us on WhatsApp
                                         </a>
                                     </div>
@@ -183,9 +184,7 @@ export default function ContactPage() {
                                     <div>
                                         <h3 className="font-bold mb-1">Address</h3>
                                         <p className="text-gray-700">
-                                            123 Tech Park, MG Road<br />
-                                            Bangalore, Karnataka 560001<br />
-                                            India
+                                            {SITE_CONFIG.address}
                                         </p>
                                     </div>
                                 </div>

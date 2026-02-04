@@ -3,8 +3,8 @@ export const SITE_CONFIG = {
     description: 'Leading IT Services & Training Company',
     url: 'https://bytsmartz.com',
     email: 'contact@bytsmartz.com',
-    phone: '+91 98881 19100',
-    whatsapp: '+919988759100',
+    phone: '+919888119100',
+    whatsapp: '+919390220006',
     address: 'Nexa Tower, F-338, Sector 74 A, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307',
 };
 
