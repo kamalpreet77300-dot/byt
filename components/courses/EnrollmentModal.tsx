@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { HiX } from 'react-icons/hi';
-import { submitContactForm } from '@/app/actions/contact';
+// import { submitContactForm } from '@/app/actions/contact';
 
 interface EnrollmentModalProps {
     courseTitle: string;
@@ -25,26 +25,26 @@ const EnrollmentModal = ({ courseTitle, isOpen, onClose }: EnrollmentModalProps)
         e.preventDefault();
         setIsSubmitting(true);
 
-        try {
-            const data = await submitContactForm({
-                type: 'COURSE_ENROLLMENT',
-                subject: `Course Enrollment Request: ${courseTitle}`,
-                ...formData,
-                courseTitle
-            });
+        // try {
+        //     const data = await submitContactForm({
+        //         type: 'COURSE_ENROLLMENT',
+        //         subject: `Course Enrollment Request: ${courseTitle}`,
+        //         ...formData,
+        //         courseTitle
+        //     });
 
-            if (data.success) {
-                alert('Thank you for your interest! Our team will contact you shortly regarding the enrollment process.');
-                onClose();
-            } else {
-                alert('Something went wrong. Please try again.');
-            }
-        } catch (error) {
-            console.error('Enrollment error:', error);
-            alert('Failed to submit request.');
-        } finally {
-            setIsSubmitting(false);
-        }
+        //     if (data.success) {
+        //         alert('Thank you for your interest! Our team will contact you shortly regarding the enrollment process.');
+        //         onClose();
+        //     } else {
+        //         alert('Something went wrong. Please try again.');
+        //     }
+        // } catch (error) {
+        //     console.error('Enrollment error:', error);
+        //     alert('Failed to submit request.');
+        // } finally {
+        //     setIsSubmitting(false);
+        // }
     };
 
     return (

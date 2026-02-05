@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { submitContactForm } from '@/app/actions/contact';
+// import { submitContactForm } from '@/app/actions/contact';
 import AnimatedTitle from '@/components/ui/AnimatedTitle';
 import Button from '@/components/ui/Button';
 import { TiLocationArrow } from 'react-icons/ti';
@@ -24,24 +24,24 @@ export default function ContactPage() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        try {
-            const data = await submitContactForm({
-                type: 'CONTACT',
-                ...formData
-            });
+        // try {
+        //     const data = await submitContactForm({
+        //         type: 'CONTACT',
+        //         ...formData
+        //     });
 
-            if (data.success) {
-                alert('Thank you for your message! We\'ll get back to you soon.');
-                setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-            } else {
-                alert('Something went wrong. Please try again or contact us directly via email.');
-            }
-        } catch (error) {
-            console.error('Submission error:', error);
-            alert('Failed to send message. Please check your connection.');
-        } finally {
-            setIsSubmitting(false);
-        }
+        //     if (data.success) {
+        //         alert('Thank you for your message! We\'ll get back to you soon.');
+        //         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        //     } else {
+        //         alert('Something went wrong. Please try again or contact us directly via email.');
+        //     }
+        // } catch (error) {
+        //     console.error('Submission error:', error);
+        //     alert('Failed to send message. Please check your connection.');
+        // } finally {
+        //     setIsSubmitting(false);
+        // }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
