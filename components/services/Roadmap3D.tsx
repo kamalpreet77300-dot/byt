@@ -190,7 +190,7 @@ const Roadmap3D = ({ process }: { process: any[] }) => {
                 <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
                 <ambientLight intensity={1.5} />
                 <pointLight position={[10, 10, 10]} intensity={2} color="#3b82f6" />
-                <ScrollControls pages={process.length * 1.5} damping={0.3}>
+                <ScrollControls pages={process.length * 0.05} damping={0.6}>
                     <Scene process={process} />
                 </ScrollControls>
                 <Environment preset="city" />

@@ -46,7 +46,7 @@ export default function ServicesPage() {
                     {/* Services Grid */}
                     <StaggerCards className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {SERVICES.map((service) => (
-                            <Link key={service.id} href={`/services`}>
+                            <Link key={service.id} href={`/services/${service.slug}`}>
                                 <BentoCard
                                     title={service.title}
                                     description={service.shortDesc}
